@@ -8,6 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Stack;
 
+import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class Origem extends JPanel implements MouseListener{
@@ -17,6 +18,7 @@ public class Origem extends JPanel implements MouseListener{
 	boolean possivel;
 	Stack<Integer> pecas;
 	Color atual, tint, selectedTint;
+	static JLayeredPane camadasRef;
 
 	Origem(int n){
 		//this.setPreferredSize(new Dimension(47, 47));
@@ -48,8 +50,7 @@ public class Origem extends JPanel implements MouseListener{
 		pecas = new Stack<Integer>();
 		pecas.push(0);
 		pecas.push(1);
-		pecas.push(2);
-			
+		pecas.push(2);	
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -89,18 +90,19 @@ public class Origem extends JPanel implements MouseListener{
 	public void mouseReleased(MouseEvent e) {
 		if(Dados.dado1 == 6 && !Dados.dado1usado && !GridTest.movimentoIniciado && dentro>0 && Dados.turno == cor) {
 			ColorSelected();
-			GridTest.caminho[0].ColorPossivel();
-			GridTest.caminho[0].nascer = true;
+			GridTest.caminho[GridTest.particular_real(0, Dados.turno)].ColorPossivel();
+			GridTest.caminho[GridTest.particular_real(0, Dados.turno)].nascer = true;
 			GridTest.movimentoIniciado = true;
 		}
 		else {
 			if(Dados.dado2 == 6 && !Dados.dado2usado && !GridTest.movimentoIniciado && dentro>0 && Dados.turno == cor) {
 				ColorSelected();
-				GridTest.caminho[0].ColorPossivel();
-				GridTest.caminho[0].nascer = true;
+				GridTest.caminho[GridTest.particular_real(0, Dados.turno)].ColorPossivel();
+				GridTest.caminho[GridTest.particular_real(0, Dados.turno)].nascer = true;
 				GridTest.movimentoIniciado = true;
 			}
 		}
+		camadasRef.repaint();
 	}
 
 	@Override

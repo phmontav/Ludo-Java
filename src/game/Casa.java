@@ -67,7 +67,23 @@ public class Casa extends JPanel implements MouseListener{
 		repaint();
 	}
 	
-	
+	public void kill() {
+		if(pos != 0 && pos != 12 && pos != 24 && pos != 36) {
+			for(int i=0; i<4; i++) {
+				if(n_pecas[i] > 0 && i != Dados.turno) {
+					while(n_pecas[i] > 0) {
+						
+						Pecas.coordPeca[i][pecas.get(i).peek()][0] = Pecas.backup[i][pecas.get(i).peek()][0];
+						Pecas.coordPeca[i][pecas.get(i).peek()][1] = Pecas.backup[i][pecas.get(i).peek()][1];
+						n_pecas[i]--;
+						GridTest.origens[i].dentro++;
+						GridTest.origens[i].pecas.push(pecas.get(i).pop());
+						camadasRef.repaint();
+					}
+				}
+			}
+		}
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
@@ -85,73 +101,6 @@ public class Casa extends JPanel implements MouseListener{
 		
 		GridTest.clickCasa(pos);
 		camadasRef.repaint();
-		/*if(possivel == true) {
-			if(pos-Dados.dado1>=0 && !Dados.dado1usado && GridTest.caminho[pos-Dados.dado1].pecaSaindo) {
-				ChangeColor(new Color(0xcbc0d3));
-				possivel = false;
-				GridTest.caminho[pos-Dados.dado1].ChangeColor(new Color(0xcbc0d3));
-				GridTest.movimentoIniciado = false;
-				GridTest.caminho[pos-Dados.dado1].pecaSaindo = false;
-				
-				GridTest.caminho[pos-Dados.dado1+Dados.dado2].possivel = GridTest.caminho[pos+Dados.dado2].possivel = false;
-				GridTest.caminho[pos-Dados.dado1+Dados.dado2].ChangeColor(new Color(0xcbc0d3));
-				GridTest.caminho[pos+Dados.dado2].ChangeColor(new Color(0xcbc0d3));
-				Dados.dado1usado = true;
-				
-			}
-			else {
-				if(pos-Dados.dado2>=0 && !Dados.dado2usado && GridTest.caminho[pos-Dados.dado2].pecaSaindo) {
-					ChangeColor(new Color(0xcbc0d3));
-					possivel = false;
-					GridTest.caminho[pos-Dados.dado2].ChangeColor(new Color(0xcbc0d3));
-					GridTest.movimentoIniciado = false;
-					GridTest.caminho[pos-Dados.dado2].pecaSaindo = false;
-					
-					GridTest.caminho[pos-Dados.dado2+Dados.dado1].possivel = GridTest.caminho[pos+Dados.dado1].possivel = false;
-					GridTest.caminho[pos-Dados.dado2+Dados.dado1].ChangeColor(new Color(0xcbc0d3));
-					GridTest.caminho[pos+Dados.dado1].ChangeColor(new Color(0xcbc0d3));
-					Dados.dado2usado = true;
-				}
-				else {
-					ChangeColor(new Color(0xcbc0d3));
-					possivel = false;
-					GridTest.caminho[pos-Dados.dado1-Dados.dado2].ChangeColor(new Color(0xcbc0d3));
-					GridTest.movimentoIniciado = false;
-					GridTest.caminho[pos-Dados.dado1-Dados.dado2].pecaSaindo = false;
-					
-					GridTest.caminho[pos-Dados.dado1].possivel = GridTest.caminho[pos-Dados.dado2].possivel = false;
-					GridTest.caminho[pos-Dados.dado1].ChangeColor(new Color(0xcbc0d3));
-					GridTest.caminho[pos-Dados.dado2].ChangeColor(new Color(0xcbc0d3));
-					Dados.dado1usado = Dados.dado2usado = true;
-				}
-			}
-		}
-		else {
-			if(!GridTest.movimentoIniciado) {
-				if(!Dados.dado1usado) {
-					ChangeColor(new Color(0x785964));
-					GridTest.caminho[pos+Dados.dado1].ChangeColor(new Color(0x785964));
-					GridTest.caminho[pos+Dados.dado1].possivel = true;
-					GridTest.movimentoIniciado = true;
-					pecaSaindo = true;
-				}
-				if(!Dados.dado2usado) {
-					ChangeColor(new Color(0x785964));
-					GridTest.caminho[pos+Dados.dado2].ChangeColor(new Color(0x785964));
-					GridTest.caminho[pos+Dados.dado2].possivel = true;
-					GridTest.movimentoIniciado = true;
-					pecaSaindo = true;
-				}
-				if(!Dados.dado1usado && !Dados.dado2usado) {
-					ChangeColor(new Color(0x785964));
-					GridTest.caminho[pos+Dados.dado1+Dados.dado2].ChangeColor(new Color(0x785964));
-					GridTest.caminho[pos+Dados.dado1+Dados.dado2].possivel = true;
-					GridTest.movimentoIniciado = true;
-					pecaSaindo = true;
-				}
-				
-			}
-		}*/
 	}
 
 	@Override
