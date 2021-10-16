@@ -19,6 +19,10 @@ public class Centro extends JPanel implements MouseListener{
 	List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
 	static JLayeredPane camadasRef;
 	Image img_atual, img_normal, img_selected;
+	static int[][][] posFinal = {{{6*47+25, 8*47-7}, {7*47, 8*47}, {8*47-25, 8*47-7}},
+								{{8*47-7, 6*47+25}, {8*47, 7*47}, {8*47-7, 8*47-25}},
+								{{6*47+25, 6*47+7}, {7*47, 6*47}, {8*47-25, 6*47+7}},
+								{{6*47+7, 6*47+25}, {6*47, 7*47}, {6*47+7, 8*47-25}}};
 
 	Centro(){
 		this.setBounds(6*47, 6*47, 141, 141);
@@ -27,6 +31,10 @@ public class Centro extends JPanel implements MouseListener{
 		addMouseListener(this);
 		img_atual = img_normal = new ImageIcon("Centro.png").getImage();
 		img_selected = new ImageIcon("Centro.png").getImage();
+		pecas.add(new Stack<Integer>());
+		pecas.add(new Stack<Integer>());
+		pecas.add(new Stack<Integer>());
+		pecas.add(new Stack<Integer>());
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -60,9 +68,81 @@ public class Centro extends JPanel implements MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(possivel) {
-			
+			if((53 - Dados.dado1) >= 47 && !Dados.dado1usado && GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].pecaSaindo) {
+				Normal();
+				possivel = false;
+				n_pecas[Dados.turno]++;
+				pecas.get(Dados.turno).push(GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].pecas.get(Dados.turno).pop());
+				GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].n_pecas[Dados.turno]--;
+				GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].ColorNormal();
+				GridTest.movimentoIniciado = false;
+				GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].pecaSaindo = false;
+				
+				GridTest.movimentoIniciado = false;
+				for(int i=0; i<68; i++) {
+					GridTest.caminho[i].ColorNormal();
+					GridTest.caminho[i].possivel = false;
+					GridTest.caminho[i].pecaSaindo = false;
+					GridTest.caminho[i].nascer = false;
+				}
+				
+				Dados.dado1usado = true;
+				Pecas.coordPeca[Dados.turno][pecas.get(Dados.turno).peek()][0] = posFinal[Dados.turno][pecas.get(Dados.turno).peek()][0];
+				Pecas.coordPeca[Dados.turno][pecas.get(Dados.turno).peek()][1] = posFinal[Dados.turno][pecas.get(Dados.turno).peek()][1];
+				Pecas.posPeca[Dados.turno][pecas.get(Dados.turno).peek()] = -1;
+				
+			}
+			else {
+				if((53 - Dados.dado2) >= 47 && !Dados.dado2usado && GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].pecaSaindo) {
+					Normal();
+					possivel = false;
+					n_pecas[Dados.turno]++;
+					pecas.get(Dados.turno).push(GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].pecas.get(Dados.turno).pop());
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].n_pecas[Dados.turno]--;
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].ColorNormal();
+					GridTest.movimentoIniciado = false;
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].pecaSaindo = false;
+					
+					GridTest.movimentoIniciado = false;
+					for(int i=0; i<68; i++) {
+						GridTest.caminho[i].ColorNormal();
+						GridTest.caminho[i].possivel = false;
+						GridTest.caminho[i].pecaSaindo = false;
+						GridTest.caminho[i].nascer = false;
+					}
+					
+					Dados.dado2usado = true;
+					Pecas.coordPeca[Dados.turno][pecas.get(Dados.turno).peek()][0] = posFinal[Dados.turno][pecas.get(Dados.turno).peek()][0];
+					Pecas.coordPeca[Dados.turno][pecas.get(Dados.turno).peek()][1] = posFinal[Dados.turno][pecas.get(Dados.turno).peek()][1];
+					Pecas.posPeca[Dados.turno][pecas.get(Dados.turno).peek()] = -1;
+				}
+				else {
+					Normal();
+					possivel = false;
+					n_pecas[Dados.turno]++;
+					pecas.get(Dados.turno).push(GridTest.caminho[GridTest.particular_real(53 - Dados.dado1 - Dados.dado2, Dados.turno)].pecas.get(Dados.turno).pop());
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado1 - Dados.dado2, Dados.turno)].n_pecas[Dados.turno]--;
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado1 - Dados.dado2, Dados.turno)].ColorNormal();
+					GridTest.movimentoIniciado = false;
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado1 - Dados.dado2, Dados.turno)].pecaSaindo = false;
+					
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].possivel = GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].possivel = false;
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado1, Dados.turno)].ColorNormal();
+					GridTest.caminho[GridTest.particular_real(53 - Dados.dado2, Dados.turno)].ColorNormal();
+					Dados.dado1usado = Dados.dado2usado = true;
+					Pecas.coordPeca[Dados.turno][pecas.get(Dados.turno).peek()][0] = posFinal[Dados.turno][pecas.get(Dados.turno).peek()][0];
+					Pecas.coordPeca[Dados.turno][pecas.get(Dados.turno).peek()][1] = posFinal[Dados.turno][pecas.get(Dados.turno).peek()][1];
+					Pecas.posPeca[Dados.turno][pecas.get(Dados.turno).peek()] = -1;
+				}
+			}
+			GridTest.pertoCentro[Dados.turno] = 0;
+			for(int i=48; i<53; i++) {
+				GridTest.pertoCentro[Dados.turno] += GridTest.caminho[GridTest.particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+			}
+			GridTest.verificar_colisao();
+			camadasRef.repaint();
+			GridTest.verificar_jogada();
 		}
-		//camadasRef.repaint();
 	}
 
 	@Override
