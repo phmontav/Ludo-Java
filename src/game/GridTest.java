@@ -2,6 +2,7 @@ package game;
 //comentario dummy
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.util.Stack;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -11,6 +12,8 @@ import javax.swing.JPanel;
 public class GridTest {
 	static Casa caminho[] = new Casa[68];		//Vetor com todas as casas do tabuleiro
 	static Origem origens[] = new Origem[4];
+	static Centro centro = new Centro();
+	static int[] pertoCentro = new int[4];
 	static boolean movimentoIniciado = false;	//True quando uma peça está sendo movida de uma casa para outra
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	25,	-1,	58,	-1,	21,	-1,	-1,	-1,	-1,	-1},
@@ -87,8 +90,9 @@ public class GridTest {
 		camadas.add(origens[2] = new Origem(2));
 		camadas.add(origens[3] = new Origem(3));
 		
-		camadas.add(new Centro());
+		camadas.add(centro);
 		Origem.camadasRef = camadas;
+		Centro.camadasRef = camadas;
 		
 		canvas1.add(tabuleiro);
 		camadas.add(canvas1);
@@ -117,6 +121,127 @@ public class GridTest {
 		return (particular_real(real_particular(pos, Dados.turno)+n, Dados.turno));
 	}
 	
+	public static void verificar_colisao() {
+		for(int k=0; k<68; k++) {
+			if(caminho[k].n_pecas[0]+caminho[k].n_pecas[1]+caminho[k].n_pecas[2]+caminho[k].n_pecas[3] > 1) {
+				for(int i = 0; i<4; i++) {
+					int[][] shift = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
+					Stack<Integer> aux = new Stack<Integer>();
+					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
+						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x+12*shift[i][0];
+						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][1] = caminho[k].y+12*shift[i][1];
+						aux.push(caminho[k].pecas.get(i).pop());
+					}
+					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
+						caminho[k].pecas.get(i).push(aux.pop());
+					}
+					//Inserir um numero em cima agora.......
+				}
+			}
+			else {
+				for(int i = 0; i<4; i++) {
+					Stack<Integer> aux = new Stack<Integer>();
+					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
+						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x;
+						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][1] = caminho[k].y;
+						aux.push(caminho[k].pecas.get(i).pop());
+					}
+					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
+						caminho[k].pecas.get(i).push(aux.pop());
+					}
+					//??????????????.......
+				}
+			}
+		}
+	}
+	
+	
+	public static void verificar_jogada() {
+		switch (pertoCentro[Dados.turno]) {
+		case 3:
+			if(Dados.dado1 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
+					(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
+					(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53)))
+				Dados.dado1usado = true;
+			if(Dados.dado2 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
+					(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
+					(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53)))
+				Dados.dado2usado = true;
+			break;
+		case 2:
+			if(centro.n_pecas[Dados.turno] == 1) {
+				if(Dados.dado1 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53)))
+					Dados.dado1usado = true;
+				if(Dados.dado2 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53)))
+					Dados.dado2usado = true;
+			}
+			if(origens[Dados.turno].dentro == 1) {
+				if((Dados.dado1 == 6 && !Dados.dado1usado) || (Dados.dado2 == 6 && !Dados.dado2usado)) {
+					//Ele pode gastar os dois dados na peca que ta fora.
+				}
+				else {
+					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53))
+							Dados.dado1usado = true;
+					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53))
+							Dados.dado2usado = true;
+				}
+			}
+			break;
+		case 1:
+			if(centro.n_pecas[Dados.turno] == 2) {
+				if(Dados.dado1 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
+										(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
+										(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53)))
+					Dados.dado1usado = true;
+				if(Dados.dado2 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
+										(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
+										(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53)))
+					Dados.dado2usado = true;
+			}
+			if(origens[Dados.turno].dentro == 2) {
+				if((Dados.dado1 == 6 && !Dados.dado1usado) || (Dados.dado2 == 6 && !Dados.dado2usado)) {
+					//Ele pode gastar os dois dados na peca que ta fora.
+				}
+				else {
+					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53))
+							Dados.dado1usado = true;
+					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53))
+							Dados.dado2usado = true;
+				}
+			}
+			if(centro.n_pecas[Dados.turno] == 1 && origens[Dados.turno].dentro == 1) {
+				if((Dados.dado1 == 6 && !Dados.dado1usado) || (Dados.dado2 == 6 && !Dados.dado2usado)) {
+					//Ele pode gastar os dois dados na peca que ta fora.
+				}
+				else {
+					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53))
+							Dados.dado1usado = true;
+					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
+						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
+						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53))
+							Dados.dado2usado = true;
+				}
+			}
+			break;
+		}
+		if(Dados.dado1usado && Dados.dado2usado)
+			Dados.proxTurno();
+	}
+	
 	public static void clickCasa(int pos) {
 		if(caminho[pos].nascer == true) {
 			if(!Dados.dado1usado && Dados.dado1 == 6) {
@@ -130,8 +255,8 @@ public class GridTest {
 				Dados.dado1usado = true;
 				Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][0] = caminho[pos].x;
 				Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][1] = caminho[pos].y;
-				if(Dados.dado2usado)
-					Dados.proxTurno();
+				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+				verificar_jogada();
 				return;
 			}
 			else {
@@ -145,12 +270,12 @@ public class GridTest {
 				Dados.dado2usado = true;
 				Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][0] = caminho[pos].x;
 				Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][1] = caminho[pos].y;
-				if(Dados.dado1usado)
-					Dados.proxTurno();
+				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+				verificar_jogada();
 				return;
 			}
 		}
-		if(caminho[pos].possivel == true) {
+		if(caminho[pos].possivel) {
 			if(avancar_casa(pos, -Dados.dado1)>=0 && !Dados.dado1usado && caminho[avancar_casa(pos, -Dados.dado1)].pecaSaindo) {
 				caminho[pos].ColorNormal();
 				caminho[pos].possivel = false;
@@ -161,15 +286,30 @@ public class GridTest {
 				movimentoIniciado = false;
 				caminho[avancar_casa(pos, -Dados.dado1)].pecaSaindo = false;
 				
-				caminho[avancar_casa(pos, -Dados.dado1+Dados.dado2)].possivel = caminho[avancar_casa(pos, +Dados.dado2)].possivel = false;
-				caminho[avancar_casa(pos, -Dados.dado1+Dados.dado2)].ColorNormal();
-				caminho[avancar_casa(pos, +Dados.dado2)].ColorNormal();
+				if((real_particular(pos, Dados.turno) - Dados.dado1 + Dados.dado2) < 53) {
+					caminho[avancar_casa(pos, -Dados.dado1+Dados.dado2)].possivel = false;
+					caminho[avancar_casa(pos, -Dados.dado1+Dados.dado2)].ColorNormal();
+				}
+				if(real_particular(pos, Dados.turno) + Dados.dado2 < 53) {
+					caminho[avancar_casa(pos, +Dados.dado2)].possivel = false;
+					caminho[avancar_casa(pos, +Dados.dado2)].ColorNormal();
+				}
 				Dados.dado1usado = true;
 				Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][0] = caminho[pos].x;
 				Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][1] = caminho[pos].y;
+				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+				
+				centro.Normal();
+				centro.possivel = false;
+				
 				caminho[pos].kill();
-				if(Dados.dado2usado)
-					Dados.proxTurno();
+				if(pos >= 48) {
+					pertoCentro[Dados.turno] = 0;
+					for(int i=48; i<53; i++) {
+						pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+					}
+				}
+				verificar_jogada();
 				
 			}
 			else {
@@ -183,15 +323,30 @@ public class GridTest {
 					movimentoIniciado = false;
 					caminho[avancar_casa(pos, -Dados.dado2)].pecaSaindo = false;
 					
-					caminho[avancar_casa(pos, -Dados.dado2+Dados.dado1)].possivel = caminho[avancar_casa(pos, +Dados.dado1)].possivel = false;
-					caminho[avancar_casa(pos, -Dados.dado2+Dados.dado1)].ColorNormal();
-					caminho[avancar_casa(pos, +Dados.dado1)].ColorNormal();
+					if(real_particular(pos, Dados.turno) - Dados.dado2 + Dados.dado1 < 53) {
+						caminho[avancar_casa(pos, -Dados.dado2+Dados.dado1)].possivel = false;
+						caminho[avancar_casa(pos, -Dados.dado2+Dados.dado1)].ColorNormal();
+					}
+					if(real_particular(pos, Dados.turno) + Dados.dado1 < 53) {
+						caminho[avancar_casa(pos, +Dados.dado1)].possivel = false;
+						caminho[avancar_casa(pos, +Dados.dado1)].ColorNormal();
+					}
 					Dados.dado2usado = true;
 					Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][0] = caminho[pos].x;
 					Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][1] = caminho[pos].y;
+					Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+					
+					centro.Normal();
+					centro.possivel = false;
+					
 					caminho[pos].kill();
-					if(Dados.dado1usado)
-						Dados.proxTurno();
+					if(pos >= 48) {
+						pertoCentro[Dados.turno] = 0;
+						for(int i=48; i<53; i++) {
+							pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+						}
+					}
+					verificar_jogada();
 				}
 				else {
 					caminho[pos].ColorNormal();
@@ -209,35 +364,76 @@ public class GridTest {
 					Dados.dado1usado = Dados.dado2usado = true;
 					Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][0] = caminho[pos].x;
 					Pecas.coordPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()][1] = caminho[pos].y;
+					Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+					
+					centro.Normal();
+					centro.possivel = false;
+					
 					caminho[pos].kill();
+					if(pos >= 48) {
+						pertoCentro[Dados.turno] = 0;
+						for(int i=48; i<53; i++) {
+							pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+						}
+					}
 					Dados.proxTurno();
 				}
 			}
 		}
 		else {
 			if(!movimentoIniciado && caminho[pos].n_pecas[Dados.turno] > 0) {
-				if(!Dados.dado1usado) {
-					caminho[pos].ColorSelected();
-					caminho[avancar_casa(pos, +Dados.dado1)].ColorPossivel();
-					caminho[avancar_casa(pos, +Dados.dado1)].possivel = true;
-					movimentoIniciado = true;
-					caminho[pos].pecaSaindo = true;
+				if(!Dados.dado1usado && real_particular(pos, Dados.turno) + Dados.dado1 <= 53) {
+					if(real_particular(pos, Dados.turno) + Dados.dado1 == 53) {
+						//tratar
+						caminho[pos].ColorSelected();
+						caminho[pos].pecaSaindo = true;
+						centro.Selected();
+						centro.possivel = true;
+						movimentoIniciado = true;
+						
+					}
+					else {
+						caminho[pos].ColorSelected();
+						caminho[avancar_casa(pos, +Dados.dado1)].ColorPossivel();
+						caminho[avancar_casa(pos, +Dados.dado1)].possivel = true;
+						movimentoIniciado = true;
+						caminho[pos].pecaSaindo = true;
+					}
 				}
-				if(!Dados.dado2usado) {
-					caminho[pos].ColorSelected();
-					caminho[avancar_casa(pos, +Dados.dado2)].ColorPossivel();
-					caminho[avancar_casa(pos, +Dados.dado2)].possivel = true;
-					movimentoIniciado = true;
-					caminho[pos].pecaSaindo = true;
+				if(!Dados.dado2usado && real_particular(pos, Dados.turno) + Dados.dado2 <= 53) {
+					if(real_particular(pos, Dados.turno) + Dados.dado2 == 53) {
+						//tratar
+						caminho[pos].ColorSelected();
+						caminho[pos].pecaSaindo = true;
+						centro.Selected();
+						centro.possivel = true;
+						movimentoIniciado = true;
+					}
+					else {
+						caminho[pos].ColorSelected();
+						caminho[avancar_casa(pos, +Dados.dado2)].ColorPossivel();
+						caminho[avancar_casa(pos, +Dados.dado2)].possivel = true;
+						movimentoIniciado = true;
+						caminho[pos].pecaSaindo = true;
+					}
 				}
-				if(!Dados.dado1usado && !Dados.dado2usado) {
-					caminho[pos].ColorSelected();
-					caminho[avancar_casa(pos, +Dados.dado1+Dados.dado2)].ColorPossivel();
-					caminho[avancar_casa(pos, +Dados.dado1+Dados.dado2)].possivel = true;
-					movimentoIniciado = true;
-					caminho[pos].pecaSaindo = true;
+				if(!Dados.dado1usado && !Dados.dado2usado && real_particular(pos, Dados.turno) + Dados.dado1 + Dados.dado2 <= 53) {
+					if(real_particular(pos, Dados.turno) + Dados.dado1 + Dados.dado2 == 53) {
+						//tratar
+						caminho[pos].ColorSelected();
+						caminho[pos].pecaSaindo = true;
+						centro.Selected();
+						centro.possivel = true;
+						movimentoIniciado = true;
+					}
+					else {
+						caminho[pos].ColorSelected();
+						caminho[avancar_casa(pos, +Dados.dado1+Dados.dado2)].ColorPossivel();
+						caminho[avancar_casa(pos, +Dados.dado1+Dados.dado2)].possivel = true;
+						movimentoIniciado = true;
+						caminho[pos].pecaSaindo = true;
+					}
 				}
-				
 			}
 			else {
 				movimentoIniciado = false;
@@ -247,6 +443,8 @@ public class GridTest {
 					caminho[i].pecaSaindo = false;
 					caminho[i].nascer = false;
 					origens[Dados.turno].ColorNormal();
+					centro.Normal();
+					centro.possivel = false;
 				}	
 			}
 		}

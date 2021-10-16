@@ -75,6 +75,7 @@ public class Casa extends JPanel implements MouseListener{
 						
 						Pecas.coordPeca[i][pecas.get(i).peek()][0] = Pecas.backup[i][pecas.get(i).peek()][0];
 						Pecas.coordPeca[i][pecas.get(i).peek()][1] = Pecas.backup[i][pecas.get(i).peek()][1];
+						Pecas.posPeca[i][pecas.get(i).peek()] = -1;
 						n_pecas[i]--;
 						GridTest.origens[i].dentro++;
 						GridTest.origens[i].pecas.push(pecas.get(i).pop());
@@ -100,6 +101,7 @@ public class Casa extends JPanel implements MouseListener{
 	public void mouseReleased(MouseEvent e) {
 		
 		GridTest.clickCasa(pos);
+		GridTest.verificar_colisao();
 		camadasRef.repaint();
 	}
 

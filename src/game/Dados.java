@@ -61,6 +61,12 @@ public class Dados extends JPanel implements MouseListener{
 			}
 		}
 		System.out.println(turno);
+		System.out.print("Pecas dessa cor DENTRO: ");
+		System.out.println(GridTest.centro.n_pecas[turno]);
+		System.out.print("Pecas FORA: ");
+		System.out.println(GridTest.origens[turno].dentro);
+		System.out.print("Pecas PERTO: ");
+		System.out.println(GridTest.pertoCentro[turno]);
 	}
 
 	@Override
@@ -78,13 +84,20 @@ public class Dados extends JPanel implements MouseListener{
 	@Override
 	public void mouseReleased(MouseEvent e) {
 
-		if((dado1usado && dado2usado) || (GridTest.origens[turno].dentro == 3 && dado1 != 6 && dado2 != 6)) {
+		if((dado1usado && dado2usado) || (GridTest.origens[turno].dentro + GridTest.centro.n_pecas[turno] == 3 && dado1 != 6 && dado2 != 6)) {
 			dado1 = random.nextInt(6) + 1; //Sorteia um numero inteiro entre 0 e 5, em seguida soma 1;
 			dado2 = random.nextInt(6) + 1;
 			label1.setIcon(DadoImg[dado1]);
 			label2.setIcon(DadoImg[dado2]);
 			dado1usado = false;
 			dado2usado = false;
+			System.out.print("Jogador ");
+			System.out.print(turno);
+			System.out.print(" tirou ");
+			System.out.print(dado1);
+			System.out.print(" e ");
+			System.out.println(dado2);
+			GridTest.verificar_jogada();
 		}
 	}
 
