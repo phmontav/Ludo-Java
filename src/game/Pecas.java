@@ -20,35 +20,47 @@ public class Pecas extends JPanel {
 								  {{1*47+27, 2*47+10}, {2*47, 2*47-20}, {3*47-27, 2*47+10}},
 								  {{1*47+27, 12*47+10}, {2*47, 12*47-20}, {3*47-27, 12*47+10}}};
 	static int[][] posPeca = {{-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}, {-1, -1, -1}};
-	int x_test, y_test;
-	Image img_az, img_am, img_vm, img_vd;
+	static int[][] p_juntas = {{1, 1, 1}, {1, 1, 1}, {1, 1, 1}, {1, 1, 1}};
+	static Image[] img_az = new Image[3], img_am = new Image[3], img_vm = new Image[3], img_vd = new Image[3];
 	
 	Pecas() {
 		this.setBounds(0, 0, 705, 705);
 		this.setOpaque(false);
-		x_test = 12*47;
-		y_test = 11*47;
-		img_az = new ImageIcon("PecaAzul.png").getImage();
-		img_am = new ImageIcon("PecaAmarela.png").getImage();
-		img_vm = new ImageIcon("PecaVermelha.png").getImage();
-		img_vd = new ImageIcon("PecaVerde.png").getImage();
+		img_az[0] = new ImageIcon("PecaAzul.png").getImage();
+		img_az[1] = new ImageIcon("PecaAzul2.png").getImage();
+		img_az[2] = new ImageIcon("PecaAzul3.png").getImage();
+		img_am[0] = new ImageIcon("PecaAmarela.png").getImage();
+		img_am[1] = new ImageIcon("PecaAmarela2.png").getImage();
+		img_am[2] = new ImageIcon("PecaAmarela3.png").getImage();
+		img_vm[0] = new ImageIcon("PecaVermelha.png").getImage();
+		img_vm[1] = new ImageIcon("PecaVermelha2.png").getImage();
+		img_vm[2] = new ImageIcon("PecaVermelha3.png").getImage();
+		img_vd[0] = new ImageIcon("PecaVerde.png").getImage();
+		img_vd[1] = new ImageIcon("PecaVerde2.png").getImage();
+		img_vd[2] = new ImageIcon("PecaVerde3.png").getImage();
+		
 	}
+	
+	static void numerar(int turno, int n, int peca) {
+		
+	}
+	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-		g.drawImage(img_az, coordPeca[0][0][0], coordPeca[0][0][1], null);
-		g.drawImage(img_az, coordPeca[0][1][0], coordPeca[0][1][1], null);
-		g.drawImage(img_az, coordPeca[0][2][0], coordPeca[0][2][1], null);
+		g.drawImage(img_az[p_juntas[0][0]-1], coordPeca[0][0][0], coordPeca[0][0][1], null);
+		g.drawImage(img_az[p_juntas[0][1]-1], coordPeca[0][1][0], coordPeca[0][1][1], null);
+		g.drawImage(img_az[p_juntas[0][2]-1], coordPeca[0][2][0], coordPeca[0][2][1], null);
 		
-		g.drawImage(img_am, coordPeca[1][0][0], coordPeca[1][0][1], null);
-		g.drawImage(img_am, coordPeca[1][1][0], coordPeca[1][1][1], null);
-		g.drawImage(img_am, coordPeca[1][2][0], coordPeca[1][2][1], null);
+		g.drawImage(img_am[p_juntas[1][0]-1], coordPeca[1][0][0], coordPeca[1][0][1], null);
+		g.drawImage(img_am[p_juntas[1][1]-1], coordPeca[1][1][0], coordPeca[1][1][1], null);
+		g.drawImage(img_am[p_juntas[1][2]-1], coordPeca[1][2][0], coordPeca[1][2][1], null);
 		
-		g.drawImage(img_vm, coordPeca[2][0][0], coordPeca[2][0][1], null);
-		g.drawImage(img_vm, coordPeca[2][1][0], coordPeca[2][1][1], null);
-		g.drawImage(img_vm, coordPeca[2][2][0], coordPeca[2][2][1], null);
+		g.drawImage(img_vm[p_juntas[2][0]-1], coordPeca[2][0][0], coordPeca[2][0][1], null);
+		g.drawImage(img_vm[p_juntas[2][1]-1], coordPeca[2][1][0], coordPeca[2][1][1], null);
+		g.drawImage(img_vm[p_juntas[2][2]-1], coordPeca[2][2][0], coordPeca[2][2][1], null);
 		
-		g.drawImage(img_vd, coordPeca[3][0][0], coordPeca[3][0][1], null);
-		g.drawImage(img_vd, coordPeca[3][1][0], coordPeca[3][1][1], null);
-		g.drawImage(img_vd, coordPeca[3][2][0], coordPeca[3][2][1], null);
+		g.drawImage(img_vd[p_juntas[3][0]-1], coordPeca[3][0][0], coordPeca[3][0][1], null);
+		g.drawImage(img_vd[p_juntas[3][1]-1], coordPeca[3][1][0], coordPeca[3][1][1], null);
+		g.drawImage(img_vd[p_juntas[3][2]-1], coordPeca[3][2][0], coordPeca[3][2][1], null);
 	}
 }

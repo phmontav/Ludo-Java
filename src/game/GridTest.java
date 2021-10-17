@@ -122,10 +122,10 @@ public class GridTest {
 	}
 	
 	public static void verificar_colisao() {
+		int[][] shift = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
 		for(int k=0; k<68; k++) {
 			if(caminho[k].n_pecas[0]+caminho[k].n_pecas[1]+caminho[k].n_pecas[2]+caminho[k].n_pecas[3] > 1) {
 				for(int i = 0; i<4; i++) {
-					int[][] shift = {{1, 1}, {1, -1}, {-1, -1}, {-1, 1}};
 					Stack<Integer> aux = new Stack<Integer>();
 					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
 						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x+12*shift[i][0];
@@ -133,9 +133,9 @@ public class GridTest {
 						aux.push(caminho[k].pecas.get(i).pop());
 					}
 					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
-						caminho[k].pecas.get(i).push(aux.pop());
+						caminho[k].pecas.get(i).push(aux.peek());
+						Pecas.p_juntas[i][aux.pop()] = caminho[k].n_pecas[i];
 					}
-					//Inserir um numero em cima agora.......
 				}
 			}
 			else {
@@ -147,7 +147,8 @@ public class GridTest {
 						aux.push(caminho[k].pecas.get(i).pop());
 					}
 					for(int j=0; j<caminho[k].n_pecas[i]; j++) {
-						caminho[k].pecas.get(i).push(aux.pop());
+						caminho[k].pecas.get(i).push(aux.peek());
+						Pecas.p_juntas[i][aux.pop()] = caminho[k].n_pecas[i];
 					}
 					//??????????????.......
 				}

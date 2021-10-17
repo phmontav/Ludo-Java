@@ -78,7 +78,8 @@ public class Casa extends JPanel implements MouseListener{
 						Pecas.posPeca[i][pecas.get(i).peek()] = -1;
 						n_pecas[i]--;
 						GridTest.origens[i].dentro++;
-						GridTest.origens[i].pecas.push(pecas.get(i).pop());
+						GridTest.origens[i].pecas.push(pecas.get(i).peek());
+						Pecas.p_juntas[i][pecas.get(i).pop()] = 1;
 						camadasRef.repaint();
 					}
 				}
