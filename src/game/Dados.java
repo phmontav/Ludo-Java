@@ -60,13 +60,13 @@ public class Dados extends JPanel implements MouseListener{
 				turno = 0;
 			}
 		}
-		System.out.println(turno);
-		System.out.print("Pecas dessa cor DENTRO: ");
+		System.out.println("Jogador atual: " + turno);
+		/*System.out.print("Pecas dessa cor DENTRO: ");
 		System.out.println(GridTest.centro.n_pecas[turno]);
 		System.out.print("Pecas FORA: ");
 		System.out.println(GridTest.origens[turno].dentro);
 		System.out.print("Pecas PERTO: ");
-		System.out.println(GridTest.pertoCentro[turno]);
+		System.out.println(GridTest.pertoCentro[turno]);*/
 	}
 
 	@Override
@@ -91,12 +91,7 @@ public class Dados extends JPanel implements MouseListener{
 			label2.setIcon(DadoImg[dado2]);
 			dado1usado = false;
 			dado2usado = false;
-			System.out.print("Jogador ");
-			System.out.print(turno);
-			System.out.print(" tirou ");
-			System.out.print(dado1);
-			System.out.print(" e ");
-			System.out.println(dado2);
+			System.out.println("       Jogador " + turno + " tirou " + dado1 + " e " + dado2);
 			GridTest.verificar_jogada();
 		}
 	}

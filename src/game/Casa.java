@@ -15,18 +15,18 @@ import javax.swing.JPanel;
 
 public class Casa extends JPanel implements MouseListener{
 	
-	int pos;			//ID da posição desta casa
-	int x, y;
-	int[] n_pecas = {0, 0, 0, 0};		//Array com numero de pecas de cada cor
-	List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
-	boolean possivel;	//Indica se é possivel mover uma peça para esta casa
-	boolean nascer;	//Indica se é possivel mover uma peça para esta casa
-	boolean pecaSaindo;	//Indica se uma peça está sendo retirada desta cada
+	int pos;			//ID da posição desta casa-------------------------------Cli
+	int x, y;																//---Serv?
+	int[] n_pecas = {0, 0, 0, 0};		//Array com numero de pecas de cada cor--Serv
+	List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();	//-----------Serv
+	boolean possivel;	//Indica se é possivel mover uma peça para esta casa-----Serv
+	boolean nascer;	//Indica se é possivel mover uma peça para esta casa---------Serv
+	boolean pecaSaindo;	//Indica se uma peça está sendo retirada desta cada------Serv
 	JLayeredPane camadasRef;
 	Color tint = new Color(0xcbc0d3);
 	Color tintPossivel = new Color(0x785964);
 	Color tintSelected = new Color(0x785964);
-	Color atual = new Color(0xcbc0d3);
+	Color atual = new Color(0xcbc0d3);		//-----------------------------------Cli
 	
 	Casa(int n, int y_n, int x_n, JLayeredPane camadas){
 		this.setPreferredSize(new Dimension(47, 47));
@@ -78,7 +78,8 @@ public class Casa extends JPanel implements MouseListener{
 						Pecas.posPeca[i][pecas.get(i).peek()] = -1;
 						n_pecas[i]--;
 						GridTest.origens[i].dentro++;
-						GridTest.origens[i].pecas.push(pecas.get(i).pop());
+						GridTest.origens[i].pecas.push(pecas.get(i).peek());
+						Pecas.p_juntas[i][pecas.get(i).pop()] = 1;
 						camadasRef.repaint();
 					}
 				}

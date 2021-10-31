@@ -30,7 +30,7 @@ public class Centro extends JPanel implements MouseListener{
 		possivel = false;
 		addMouseListener(this);
 		img_atual = img_normal = new ImageIcon("Centro.png").getImage();
-		img_selected = new ImageIcon("Centro.png").getImage();
+		img_selected = new ImageIcon("CentroSelected.png").getImage();
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
