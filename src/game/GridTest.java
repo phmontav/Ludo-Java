@@ -32,7 +32,7 @@ public class GridTest {
 					 		{-1, -1,	-1,	-1,	-1,	46,	-1,	47,	-1,	0,	-1,	-1,	-1,	-1,	-1}};
 	static Pecas camadaPecas = new Pecas();
 	
-	public static void main(String[] args) {
+	GridTest() {
 		
 		JLayeredPane camadas = new JLayeredPane();	//Organiza os gráficos que estão aparecendo por camadas
 		camadas.setBounds(0, 0, 1000, 705);

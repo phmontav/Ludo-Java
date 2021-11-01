@@ -19,7 +19,10 @@ public class ServerTest {
 	private static final int PORT = 9090;
 	
 	static private ArrayList<ClientHandler> clients = new ArrayList<>();
+	static public int qtConectada = 0;
+	static public int[] statusJogadores = {0, 0, 0, 0};
 	private static ExecutorService pool = Executors.newFixedThreadPool(4);
+	public static volatile boolean esperarConexao = true;
 	
 	public static void main(String[] args) throws IOException {
 		ServerSocket listener = new ServerSocket(PORT);
@@ -48,20 +51,27 @@ public class ServerTest {
 			System.out.println("[SERVER] Erro na identificacao do IP.");
 		}
 		
-		
-		while(true) {
+		while(esperarConexao && qtConectada < 4) {
 			System.out.println("[SERVER] Esperando conexao com cliente...");
 			Socket client = listener.accept();
-			BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-			String clientResponse = in.readLine();
+			if(!esperarConexao) {
+				break;
+			}
 			ClientHandler clientThread = new ClientHandler(client);
 			clients.add(clientThread);
-			
 			pool.execute(clientThread);
-			outToAll("Conexao estabelecida com cliente: " + clientResponse);
+			clients.get(qtConectada).out.println(qtConectada);
+			statusJogadores[qtConectada] = 1;
+			outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 0");
+			/*String clientResponse = in.readLine();
+			outToAll("Conexao estabelecida com cliente: " + clientResponse);*/
+			qtConectada++;
 		}
-		
-		
+		while(qtConectada == 4 && esperarConexao) {}
+		outToAll("STATUS__JOGADORES " + ServerTest.statusJogadores[0] + " " + ServerTest.statusJogadores[1] + " " + ServerTest.statusJogadores[2] + " " + ServerTest.statusJogadores[3] + " 1");
+		while(true) {
+			
+		}
 		//System.out.println("[SERVER] Dados Enviados. Encerrando...");
 		//client.close();
 		//listener.close();
