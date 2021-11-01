@@ -18,7 +18,7 @@ public class TelaConexao implements Runnable, ActionListener{
 	static JButton botao = new JButton("PRONTO");
 	static JPanel panel = new JPanel();
 	//ImageIcon fundo = new ImageIcon("TelaInicialLudo.png");
-	static JLabel voce = new JLabel("Você é o Jogador " + (ClientTest.ID+1));
+	static JLabel voce = new JLabel("Vocï¿½ ï¿½ o Jogador " + (ClientTest.ID+1));
 	static JLabel[] j = new JLabel[4];
 	static JLabel[] j_conect = new JLabel[4];
 	static JLabel[] j_pronto = new JLabel[4];
@@ -55,7 +55,7 @@ public class TelaConexao implements Runnable, ActionListener{
 		voce.setForeground(new Color(0x2dc067));
 		panel.add(voce);
 		
-		for(int i=0; i<4; i++) {
+		for(int i = 0; i < 4; i++) {
 			j[i] = new JLabel();
 			j_conect[i] = new JLabel();
 			j_pronto[i] = new JLabel();
@@ -69,7 +69,7 @@ public class TelaConexao implements Runnable, ActionListener{
 			j_conect[i].setForeground(Color.red);
 			
 			j_pronto[i].setBounds(370, 200+70*i, 200, 50);
-			//j_pronto[i].setText("não pronto");
+			//j_pronto[i].setText("nï¿½o pronto");
 			j_pronto[i].setFont(new Font("Arial", Font.BOLD, 30));
 			j_pronto[i].setForeground(Color.red);
 			
@@ -88,25 +88,25 @@ public class TelaConexao implements Runnable, ActionListener{
 	}
 
 	static public void atualizar(int id, int[] jStatus) {
-		voce.setText("Você é o Jogador " + (id+1));
+		voce.setText("Vocï¿½ ï¿½ o Jogador " + (id+1));
 		jStatusBackup = jStatus;
 	}
 
 	@Override
 	public void run() {
 		while(true) {
-			for(int i=0; i<4; i++) {
+			for(int i = 0; i < 4; i++) {
 				switch (jStatusBackup[i]) {
 				case 0:
 					j_conect[i].setText(" esperando ");
 					j_conect[i].setForeground(Color.red);
-					j_pronto[i].setText("não pronto");
+					j_pronto[i].setText("nï¿½o pronto");
 					j_pronto[i].setForeground(Color.red);
 					break;
 				case 1:
 					j_conect[i].setText(" conectado ");
 					j_conect[i].setForeground(Color.green);
-					j_pronto[i].setText("não pronto");
+					j_pronto[i].setText("nï¿½o pronto");
 					j_pronto[i].setForeground(Color.red);
 					break;
 				case 2:
