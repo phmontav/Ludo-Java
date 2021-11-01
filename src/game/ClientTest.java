@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.JOptionPane;
 
@@ -13,7 +15,9 @@ public class ClientTest {
 
 	private static String SERVER_IP = "127.0.0.1";
 	private static final int SERVER_PORT = 9090;
+	public static int ID;
 	static Socket receptor;
+	private static ExecutorService pool = Executors.newFixedThreadPool(2);
 	
 	public static void main(String[] args) throws IOException {
 		
@@ -26,17 +30,16 @@ public class ClientTest {
 		receptor = new Socket (insertIP, SERVER_PORT);
 		ServerConnection serverConn = new ServerConnection(receptor, apelido);
 		SERVER_IP = insertIP;
-		new Thread(serverConn).start();
+		//new Thread(serverConn).start();
+		pool.execute(serverConn);
 		TelaInicial.frame.dispose();
-		TelaConexao loading = new TelaConexao();
+		TelaConexao loading = new TelaConexao(serverConn);
+		pool.execute(loading);
+		//new Thread(loading).start();
 		
-		while(true) {
-			int i = 3;
-			if(i == 2)
-				break;
-		}
+		/*
 		receptor.close();
-		System.exit(0);
+		System.exit(0);*/
 		
 		return true;
 	}

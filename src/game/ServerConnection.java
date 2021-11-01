@@ -13,6 +13,9 @@ public class ServerConnection implements Runnable{
 	public PrintWriter out;
 	
 	public String apelido;
+	public int ID;
+	
+	public static GridTest tabuleiro;
 	
 	public ServerConnection(Socket s, String nome) throws IOException {
 		server = s;
@@ -24,11 +27,15 @@ public class ServerConnection implements Runnable{
 	@Override
 	public void run() {
 		try {
+			String serverResponse = in.readLine();
+			ID = Integer.valueOf(serverResponse);
+			ClientTest.ID = Integer.valueOf(serverResponse);
 			out.println(apelido);
 			while(true) {
-				String serverResponse = in.readLine();
-				
+				serverResponse = in.readLine();
+				interpretarMensagem(serverResponse);
 				if(serverResponse == null) break;
+				
 				System.out.println(serverResponse);
 			}
 		} catch (IOException e) {
@@ -40,6 +47,25 @@ public class ServerConnection implements Runnable{
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private void interpretarMensagem(String msg) {
+		if(msg.startsWith("STATUS__JOGADORES")) {
+			if(msg.charAt(26) == '1') {
+				TelaConexao.frame.dispose();
+				tabuleiro = new GridTest();
+			}
+			int[] i = new int[4];
+			i[0] = (int)(msg.charAt(18) - '0');
+			i[1] = (int)(msg.charAt(20) - '0');
+			i[2] = (int)(msg.charAt(22) - '0');
+			i[3] = (int)(msg.charAt(24) - '0');
+			TelaConexao.atualizar(ID, i);
+		}
+	}
+	
+	public void enviarMensagem(String msg) {
+		out.println(msg);
 	}
 
 }
