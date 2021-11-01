@@ -1,4 +1,4 @@
-package game;
+package graficos;
 //comentario dummy
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -14,7 +14,7 @@ public class GridTest {
 	static Origem origens[] = new Origem[4];
 	static Centro centro = new Centro();
 	static int[] pertoCentro = new int[4];
-	static boolean movimentoIniciado = false;	//True quando uma peça está sendo movida de uma casa para outra
+	static boolean movimentoIniciado = false;	//True quando uma peï¿½a estï¿½ sendo movida de uma casa para outra
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	25,	-1,	58,	-1,	21,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	26,	-1,	59,	-1,	20,	-1,	-1,	-1,	-1,	-1},
@@ -32,9 +32,9 @@ public class GridTest {
 					 		{-1, -1,	-1,	-1,	-1,	46,	-1,	47,	-1,	0,	-1,	-1,	-1,	-1,	-1}};
 	static Pecas camadaPecas = new Pecas();
 	
-	GridTest() {
+	public GridTest() {
 		
-		JLayeredPane camadas = new JLayeredPane();	//Organiza os gráficos que estão aparecendo por camadas
+		JLayeredPane camadas = new JLayeredPane();	//Organiza os grï¿½ficos que estï¿½o aparecendo por camadas
 		camadas.setBounds(0, 0, 1000, 705);
 		
 		JFrame frame = new JFrame();

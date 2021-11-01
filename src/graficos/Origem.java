@@ -1,4 +1,4 @@
-package game;
+package graficos;
 
 import java.awt.Color;
 import java.awt.Dimension;

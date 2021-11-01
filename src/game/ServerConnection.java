@@ -1,5 +1,6 @@
 package game;
 
+import graficos.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

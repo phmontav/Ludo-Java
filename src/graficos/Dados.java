@@ -1,4 +1,4 @@
-package game;
+package graficos;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 
 public class Dados extends JPanel implements MouseListener{
 
-	static int dado1, dado2, turno;						//Valor do dado 1, valor do dado 2 e valor do jogador que está jogando agora(1, 2, 3 ou 4 para azul, amarelo, vermelho e verde)
+	static int dado1, dado2, turno;						//Valor do dado 1, valor do dado 2 e valor do jogador que estï¿½ jogando agora(1, 2, 3 ou 4 para azul, amarelo, vermelho e verde)
 	static boolean dado1usado=true, dado2usado=true;	//Indica se determinado dado ja foi utilizado na jogada atual
 	Random random;
 	JLabel label1, label2;								//Icone clicavel dos dados 1 e 2
