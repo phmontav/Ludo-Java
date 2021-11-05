@@ -235,6 +235,7 @@ public class GridLogic {
 	}
 	
 	public static void clickCasa(int pos) {
+		int avanco = 0;
 		if(caminho[pos].nascer == true) {
 			if(!Dados.dado1usado && Dados.dado1 == 6) {
 				caminho[pos].nascer = false;
@@ -272,29 +273,48 @@ public class GridLogic {
 			}
 		}
 		if(caminho[pos].possivel) {
-			if(avancar_casa(pos, -Dados.dado1)>=0 && !Dados.dado1usado && caminho[avancar_casa(pos, -Dados.dado1)].pecaSaindo) {
+			avanco = avancar_casa(pos, -Dados.dado1);
+			if(avanco >= 0 && !Dados.dado1usado && caminho[avanco].pecaSaindo) {
 				caminho[pos].ColorNormal();
 				caminho[pos].possivel = false;
 				caminho[pos].n_pecas[Dados.turno]++;
-				caminho[pos].pecas.get(Dados.turno).push(caminho[avancar_casa(pos, -Dados.dado1)].pecas.get(Dados.turno).pop());
-				caminho[avancar_casa(pos, -Dados.dado1)].n_pecas[Dados.turno]--;
-				caminho[avancar_casa(pos, -Dados.dado1)].ColorNormal();
+				caminho[pos].pecas.get(Dados.turno).push(caminho[avanco].pecas.get(Dados.turno).pop());
+				caminho[avanco].n_pecas[Dados.turno]--;
+				caminho[avanco].ColorNormal();
 				movimentoIniciado = false;
-				caminho[avancar_casa(pos, -Dados.dado1)].pecaSaindo = false;
+				caminho[avanco].pecaSaindo = false;
+				//mensagem relativa a casa atual: pos
+				ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(pos, 0);
+				//mensagem relativa a casa posterior: avancar_casa(pos, -Dados.dado1)
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+				
 				
 				if((real_particular(pos, Dados.turno) - Dados.dado1 + Dados.dado2) < 53) {
-					caminho[avancar_casa(pos, -Dados.dado1+Dados.dado2)].possivel = false;
-					caminho[avancar_casa(pos, -Dados.dado1+Dados.dado2)].ColorNormal();
+					avanco = avancar_casa(pos, -Dados.dado1+Dados.dado2);
+					caminho[avanco].possivel = false;
+					caminho[avanco].ColorNormal();
+					//mensagem relativa a casa posterior: avancar_casa(pos, -Dados.dado1+Dados.dado2)
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
 				}
 				if(real_particular(pos, Dados.turno) + Dados.dado2 < 53) {
-					caminho[avancar_casa(pos, +Dados.dado2)].possivel = false;
-					caminho[avancar_casa(pos, +Dados.dado2)].ColorNormal();
+					avanco = avancar_casa(pos, +Dados.dado2);
+					caminho[avanco].possivel = false;
+					caminho[avanco].ColorNormal();
+					//mensagem relativa a casa posterior: avancar_casa(pos, +Dados.dado2)
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
 				}
 				Dados.dado1usado = true;
 				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
 				
 				centro.Normal();
 				centro.possivel = false;
+				//mensagem relativa ao centro
+				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+				ServerLudo.colorir_centro(0);
 				
 				caminho[pos].kill();
 				if(pos >= 48) {
@@ -307,57 +327,97 @@ public class GridLogic {
 				
 			}
 			else {
-				if(avancar_casa(pos, -Dados.dado2)>=0 && !Dados.dado2usado && caminho[avancar_casa(pos, -Dados.dado2)].pecaSaindo) {
+				avanco = avancar_casa(pos, -Dados.dado2);
+				if(avanco >= 0 && !Dados.dado2usado && caminho[avanco].pecaSaindo) {
 					caminho[pos].ColorNormal();
 					caminho[pos].possivel = false;
 					caminho[pos].n_pecas[Dados.turno]++;
-					caminho[pos].pecas.get(Dados.turno).push(caminho[avancar_casa(pos, -Dados.dado2)].pecas.get(Dados.turno).pop());
-					caminho[avancar_casa(pos, -Dados.dado2)].n_pecas[Dados.turno]--;
-					caminho[avancar_casa(pos, -Dados.dado2)].ColorNormal();
+					caminho[pos].pecas.get(Dados.turno).push(caminho[avanco].pecas.get(Dados.turno).pop());
+					caminho[avanco].n_pecas[Dados.turno]--;
+					caminho[avanco].ColorNormal();
 					movimentoIniciado = false;
-					caminho[avancar_casa(pos, -Dados.dado2)].pecaSaindo = false;
+					caminho[avanco].pecaSaindo = false;
+					//mensagem relativa a casa atual: pos
+					ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(pos, 0);
+					//mensagem relativa a casa posterior: avanco
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
 					
 					if(real_particular(pos, Dados.turno) - Dados.dado2 + Dados.dado1 < 53) {
-						caminho[avancar_casa(pos, -Dados.dado2+Dados.dado1)].possivel = false;
-						caminho[avancar_casa(pos, -Dados.dado2+Dados.dado1)].ColorNormal();
+						avanco = avancar_casa(pos, -Dados.dado2+Dados.dado1);
+						caminho[avanco].possivel = false;
+						caminho[avanco].ColorNormal();
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 0);
 					}
 					if(real_particular(pos, Dados.turno) + Dados.dado1 < 53) {
-						caminho[avancar_casa(pos, +Dados.dado1)].possivel = false;
-						caminho[avancar_casa(pos, +Dados.dado1)].ColorNormal();
+						avanco = avancar_casa(pos, +Dados.dado1);
+						caminho[avanco].possivel = false;
+						caminho[avanco].ColorNormal();
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 0);
 					}
 					Dados.dado2usado = true;
 					Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
 					
 					centro.Normal();
 					centro.possivel = false;
+					//mensagem relativa ao centro
+					ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+					ServerLudo.colorir_centro(0);
 					
 					caminho[pos].kill();
 					if(pos >= 48) {
 						pertoCentro[Dados.turno] = 0;
-						for(int i=48; i<53; i++) {
+						for(int i = 48; i < 53; i++) {
 							pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
 						}
 					}
 					verificar_jogada();
 				}
 				else {
+					avanco = avancar_casa(pos, -Dados.dado1-Dados.dado2);
 					caminho[pos].ColorNormal();
 					caminho[pos].possivel = false;
 					caminho[pos].n_pecas[Dados.turno]++;
-					caminho[pos].pecas.get(Dados.turno).push(caminho[avancar_casa(pos, -Dados.dado1-Dados.dado2)].pecas.get(Dados.turno).pop());
-					caminho[avancar_casa(pos, -Dados.dado1-Dados.dado2)].n_pecas[Dados.turno]--;
-					caminho[avancar_casa(pos, -Dados.dado1-Dados.dado2)].ColorNormal();
+					caminho[pos].pecas.get(Dados.turno).push(caminho[avanco].pecas.get(Dados.turno).pop());
+					caminho[avanco].n_pecas[Dados.turno]--;
+					caminho[avanco].ColorNormal();
 					movimentoIniciado = false;
-					caminho[avancar_casa(pos, -Dados.dado1-Dados.dado2)].pecaSaindo = false;
+					caminho[avanco].pecaSaindo = false;
+					//mensagem relativa a casa atual: pos
+					ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(pos, 0);
+					//mensagem relativa a casa posterior: avanco
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
 					
-					caminho[avancar_casa(pos, -Dados.dado1)].possivel = caminho[avancar_casa(pos, -Dados.dado2)].possivel = false;
-					caminho[avancar_casa(pos, -Dados.dado1)].ColorNormal();
-					caminho[avancar_casa(pos, -Dados.dado2)].ColorNormal();
+					avanco = avancar_casa(pos, -Dados.dado1);
+					caminho[avanco].possivel = false;
+					caminho[avanco].ColorNormal();
+					//mensagem relativa a casa posterior: avanco
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
+					
+					avanco = avancar_casa(pos, -Dados.dado2);
+					caminho[avanco].possivel = false;
+					caminho[avanco].ColorNormal();
+					//mensagem relativa a casa posterior: avanco
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
+					
+					
 					Dados.dado1usado = Dados.dado2usado = true;
 					Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
 					
 					centro.Normal();
 					centro.possivel = false;
+					//mensagem relativa ao centro
+					ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+					ServerLudo.colorir_centro(0);
 					
 					caminho[pos].kill();
 					if(pos >= 48) {
@@ -366,6 +426,7 @@ public class GridLogic {
 							pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
 						}
 					}
+					ServerLudo.atualizar_dados(Dados.dado1, Dados.dado1usado, Dados.dado2, Dados.dado2usado);
 					Dados.proxTurno();
 				}
 			}
@@ -380,14 +441,28 @@ public class GridLogic {
 						centro.Selected();
 						centro.possivel = true;
 						movimentoIniciado = true;
+						//mensagem relativa a casa atual: pos
+						ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(pos, 2);
+						//mensagem relativa ao centro
+						ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+						ServerLudo.colorir_centro(1);
 						
 					}
 					else {
+						avanco = avancar_casa(pos, +Dados.dado1);
 						caminho[pos].ColorSelected();
-						caminho[avancar_casa(pos, +Dados.dado1)].ColorPossivel();
-						caminho[avancar_casa(pos, +Dados.dado1)].possivel = true;
+						caminho[avanco].ColorPossivel();
+						caminho[avanco].possivel = true;
 						movimentoIniciado = true;
 						caminho[pos].pecaSaindo = true;
+
+						//mensagem relativa a casa atual: pos
+						ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(pos, 2);
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 1);
 					}
 				}
 				if(!Dados.dado2usado && real_particular(pos, Dados.turno) + Dados.dado2 <= 53) {
@@ -398,13 +473,28 @@ public class GridLogic {
 						centro.Selected();
 						centro.possivel = true;
 						movimentoIniciado = true;
+						
+						//mensagem relativa a casa atual: pos
+						ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(pos, 2);
+						//mensagem relativa ao centro
+						ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+						ServerLudo.colorir_centro(1);
 					}
 					else {
+						avanco = avancar_casa(pos, +Dados.dado2);
 						caminho[pos].ColorSelected();
-						caminho[avancar_casa(pos, +Dados.dado2)].ColorPossivel();
-						caminho[avancar_casa(pos, +Dados.dado2)].possivel = true;
+						caminho[avanco].ColorPossivel();
+						caminho[avanco].possivel = true;
 						movimentoIniciado = true;
 						caminho[pos].pecaSaindo = true;
+
+						//mensagem relativa a casa atual: pos
+						ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(pos, 2);
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 1);
 					}
 				}
 				if(!Dados.dado1usado && !Dados.dado2usado && real_particular(pos, Dados.turno) + Dados.dado1 + Dados.dado2 <= 53) {
@@ -415,27 +505,53 @@ public class GridLogic {
 						centro.Selected();
 						centro.possivel = true;
 						movimentoIniciado = true;
+						
+						//mensagem relativa a casa atual: pos
+						ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(pos, 2);
+						//mensagem relativa ao centro
+						ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+						ServerLudo.colorir_centro(1);
 					}
 					else {
+						avanco = avancar_casa(pos, +Dados.dado1+Dados.dado2);
 						caminho[pos].ColorSelected();
-						caminho[avancar_casa(pos, +Dados.dado1+Dados.dado2)].ColorPossivel();
-						caminho[avancar_casa(pos, +Dados.dado1+Dados.dado2)].possivel = true;
+						caminho[avanco].ColorPossivel();
+						caminho[avanco].possivel = true;
 						movimentoIniciado = true;
 						caminho[pos].pecaSaindo = true;
+
+						//mensagem relativa a casa atual: pos
+						ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(pos, 2);
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 1);
 					}
 				}
 			}
 			else {
 				movimentoIniciado = false;
-				for(int i=0; i<68; i++) {
-					caminho[i].ColorNormal();
-					caminho[i].possivel = false;
-					caminho[i].pecaSaindo = false;
-					caminho[i].nascer = false;
-					origens[Dados.turno].ColorNormal();
-					centro.Normal();
-					centro.possivel = false;
-				}	
+				for(int i = 0; i < 68; i++) {
+					if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
+						avanco = i;
+						caminho[i].ColorNormal();
+						caminho[i].possivel = false;
+						caminho[i].pecaSaindo = false;
+						caminho[i].nascer = false;
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 0);
+					}
+				}
+				origens[Dados.turno].ColorNormal();
+				ServerLudo.disponivel_origem(origens[Dados.turno].possivel, movimentoIniciado);
+				ServerLudo.colorir_origem(0);
+				
+				centro.Normal();
+				centro.possivel = false;	
+				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+				ServerLudo.colorir_centro(0);
 			}
 		}
 	}

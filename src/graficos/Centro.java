@@ -136,7 +136,7 @@ public class Centro extends JPanel implements MouseListener{
 				}
 			}
 			GridTest.pertoCentro[Dados.turno] = 0;
-			for(int i=48; i<53; i++) {
+			for(int i = 48; i < 53; i++) {
 				GridTest.pertoCentro[Dados.turno] += GridTest.caminho[GridTest.particular_real(i, Dados.turno)].n_pecas[Dados.turno];
 			}
 			GridTest.verificar_colisao();
