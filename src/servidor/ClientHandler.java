@@ -1,4 +1,4 @@
-package game;
+package servidor;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class ClientHandler implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//ServerTest.outToAll( x );
+		//ServerLudo.outToAll( x );
 		
 		//out.close();
 		//sc.close();
@@ -41,20 +41,20 @@ public class ClientHandler implements Runnable {
 		if(msg.startsWith("INICIAR_JOGO")) {
 			int id = (int)(msg.charAt(13) - '0');
 			if(msg.charAt(15) == '0')
-				ServerTest.statusJogadores[id] = 1;
+				ServerLudo.statusJogadores[id] = 1;
 			else
-				ServerTest.statusJogadores[id] = 2;
+				ServerLudo.statusJogadores[id] = 2;
 		}
-		ServerTest.outToAll("STATUS__JOGADORES " + ServerTest.statusJogadores[0] + " " + ServerTest.statusJogadores[1] + " " + ServerTest.statusJogadores[2] + " " + ServerTest.statusJogadores[3] + " 0");
+		ServerLudo.outToAll("STATUS__JOGADORES " + ServerLudo.statusJogadores[0] + " " + ServerLudo.statusJogadores[1] + " " + ServerLudo.statusJogadores[2] + " " + ServerLudo.statusJogadores[3] + " 0");
 		int terminar = 2;
-		for(int i = 0; i < ServerTest.qtConectada; i++)
+		for(int i = 0; i < ServerLudo.qtConectada; i++)
 		{
-			if(ServerTest.statusJogadores[i] <= terminar)
-				terminar = ServerTest.statusJogadores[i] ;
+			if(ServerLudo.statusJogadores[i] <= terminar)
+				terminar = ServerLudo.statusJogadores[i] ;
 		}
-		if(terminar == 2 && ServerTest.qtConectada > 1) {
-			ServerTest.esperarConexao = false;
-			if(ServerTest.qtConectada<4) {
+		if(terminar == 2 && ServerLudo.qtConectada > 1) {
+			ServerLudo.esperarConexao = false;
+			if(ServerLudo.qtConectada<4) {
 				Socket dummy = new Socket ("127.0.0.1", 9090);
 				dummy.close();
 			}

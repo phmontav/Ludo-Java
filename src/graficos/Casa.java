@@ -1,4 +1,4 @@
-package game;
+package graficos;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -15,20 +15,20 @@ import javax.swing.JPanel;
 
 public class Casa extends JPanel implements MouseListener{
 	
-	int pos;			//ID da posição desta casa-------------------------------Cli
-	int x, y;																//---Serv?
-	int[] n_pecas = {0, 0, 0, 0};		//Array com numero de pecas de cada cor--Serv
-	List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();	//-----------Serv
-	boolean possivel;	//Indica se é possivel mover uma peça para esta casa-----Serv
-	boolean nascer;	//Indica se é possivel mover uma peça para esta casa---------Serv
-	boolean pecaSaindo;	//Indica se uma peça está sendo retirada desta cada------Serv
-	JLayeredPane camadasRef;
+	public int pos;			//ID da posiï¿½ï¿½o desta casa-------------------------------Cli
+	public int x, y;																//---Serv?
+	public int[] n_pecas = {0, 0, 0, 0};		//Array com numero de pecas de cada cor--Serv
+	public List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();	//-----------Serv
+	public boolean possivel;	//Indica se ï¿½ possivel mover uma peï¿½a para esta casa-----Serv
+	public boolean nascer;	//Indica se ï¿½ possivel mover uma peï¿½a para esta casa---------Serv
+	public boolean pecaSaindo;	//Indica se uma peï¿½a estï¿½ sendo retirada desta cada------Serv
+	public JLayeredPane camadasRef;
 	Color tint = new Color(0xcbc0d3);
 	Color tintPossivel = new Color(0x785964);
 	Color tintSelected = new Color(0x785964);
 	Color atual = new Color(0xcbc0d3);		//-----------------------------------Cli
 	
-	Casa(int n, int y_n, int x_n, JLayeredPane camadas){
+	public Casa(int n, int y_n, int x_n, JLayeredPane camadas){
 		this.setPreferredSize(new Dimension(47, 47));
 		this.setBackground(Color.white);
 		addMouseListener(this);

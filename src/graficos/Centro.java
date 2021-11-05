@@ -1,4 +1,4 @@
-package game;
+package graficos;
 
 import java.awt.Graphics;
 import java.awt.Image;
@@ -14,17 +14,17 @@ import javax.swing.JPanel;
 
 public class Centro extends JPanel implements MouseListener{
 
-	boolean possivel;
-	int[] n_pecas = {0, 0, 0, 0};
+	public boolean possivel;
+	public int[] n_pecas = {0, 0, 0, 0};
 	List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
-	static JLayeredPane camadasRef;
+	public static JLayeredPane camadasRef;
 	Image img_atual, img_normal, img_selected;
-	static int[][][] posFinal = {{{6*47+25, 8*47-7}, {7*47, 8*47}, {8*47-25, 8*47-7}},
+	public static int[][][] posFinal = {{{6*47+25, 8*47-7}, {7*47, 8*47}, {8*47-25, 8*47-7}},
 								{{8*47-7, 6*47+25}, {8*47, 7*47}, {8*47-7, 8*47-25}},
 								{{6*47+25, 6*47+7}, {7*47, 6*47}, {8*47-25, 6*47+7}},
 								{{6*47+7, 6*47+25}, {6*47, 7*47}, {6*47+7, 8*47-25}}};
 
-	Centro(){
+	public Centro(){
 		this.setBounds(6*47, 6*47, 141, 141);
 		this.setOpaque(false);
 		possivel = false;
@@ -136,7 +136,7 @@ public class Centro extends JPanel implements MouseListener{
 				}
 			}
 			GridTest.pertoCentro[Dados.turno] = 0;
-			for(int i=48; i<53; i++) {
+			for(int i = 48; i < 53; i++) {
 				GridTest.pertoCentro[Dados.turno] += GridTest.caminho[GridTest.particular_real(i, Dados.turno)].n_pecas[Dados.turno];
 			}
 			GridTest.verificar_colisao();

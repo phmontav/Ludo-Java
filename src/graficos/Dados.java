@@ -1,4 +1,4 @@
-package game;
+package graficos;
 
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -12,13 +12,13 @@ import javax.swing.JPanel;
 
 public class Dados extends JPanel implements MouseListener{
 
-	static int dado1, dado2, turno;						//Valor do dado 1, valor do dado 2 e valor do jogador que está jogando agora(1, 2, 3 ou 4 para azul, amarelo, vermelho e verde)
-	static boolean dado1usado=true, dado2usado=true;	//Indica se determinado dado ja foi utilizado na jogada atual
+	static public int dado1, dado2, turno;						//Valor do dado 1, valor do dado 2 e valor do jogador que estï¿½ jogando agora(1, 2, 3 ou 4 para azul, amarelo, vermelho e verde)
+	static public boolean dado1usado=true, dado2usado=true;	//Indica se determinado dado ja foi utilizado na jogada atual
 	Random random;
 	JLabel label1, label2;								//Icone clicavel dos dados 1 e 2
 	ImageIcon[] DadoImg;								//Vetor que possui as imagens dos dados
 	
-	Dados() {
+	public Dados() {
 		DadoImg = new ImageIcon[7];
 		for(int i=1; i<7; i++) {
 			String nomeImg = "Dado" + i + ".png";
@@ -51,7 +51,7 @@ public class Dados extends JPanel implements MouseListener{
 		this.setVisible(true);
 	}
 	
-	static void proxTurno() {
+	static public void proxTurno() {
 		if(Dados.dado1 == 6 && Dados.dado2 == 6) {
 			//repete o turno
 		}
@@ -61,12 +61,6 @@ public class Dados extends JPanel implements MouseListener{
 			}
 		}
 		System.out.println("Jogador atual: " + turno);
-		/*System.out.print("Pecas dessa cor DENTRO: ");
-		System.out.println(GridTest.centro.n_pecas[turno]);
-		System.out.print("Pecas FORA: ");
-		System.out.println(GridTest.origens[turno].dentro);
-		System.out.print("Pecas PERTO: ");
-		System.out.println(GridTest.pertoCentro[turno]);*/
 	}
 
 	@Override

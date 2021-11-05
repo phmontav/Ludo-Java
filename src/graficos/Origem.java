@@ -1,4 +1,4 @@
-package game;
+package graficos;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -13,14 +13,14 @@ import javax.swing.JPanel;
 
 public class Origem extends JPanel implements MouseListener{
 
-	int dentro;
-	int cor;
-	boolean possivel;
-	Stack<Integer> pecas;
-	Color atual, tint, selectedTint;
-	static JLayeredPane camadasRef;
+	public int dentro;
+	public int cor;
+	public boolean possivel;
+	public Stack<Integer> pecas;
+	public Color atual, tint, selectedTint;
+	public static JLayeredPane camadasRef;
 
-	Origem(int n){
+	public Origem(int n){
 		//this.setPreferredSize(new Dimension(47, 47));
 		//this.setPreferredSize(new Dimension(200, 200));
 		
