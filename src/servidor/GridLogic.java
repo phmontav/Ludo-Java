@@ -1,6 +1,5 @@
 package servidor;
 
-import graficos.*;
 //comentario dummy
 import java.awt.Color;
 import java.awt.GridLayout;
@@ -11,12 +10,18 @@ import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
+import cliente.CasaCliente;
+import cliente.CentroCliente;
+import cliente.DadosCliente;
+import cliente.OrigemCliente;
+
 public class GridLogic {
-	static Casa caminho[] = new Casa[68];		//Vetor com todas as casas do tabuleiro
-	static Origem origens[] = new Origem[4];
-	static Centro centro = new Centro();
+	static CasaServidor caminho[] = new CasaServidor[68];		//Vetor com todas as casas do tabuleiro
+	static OrigemServidor origens[] = new OrigemServidor[4];
+	static CentroServidor centro = new CentroServidor();
 	static int[] pertoCentro = new int[4];
 	static boolean movimentoIniciado = false;	//True quando uma pe�a est� sendo movida de uma casa para outra
+	static JLayeredPane camadas;
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	25,	-1,	58,	-1,	21,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	26,	-1,	59,	-1,	20,	-1,	-1,	-1,	-1,	-1},
@@ -32,33 +37,42 @@ public class GridLogic {
 					 		{-1, -1,	-1,	-1,	-1,	44,	-1,	49,	-1,	2,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	45,	-1,	48,	-1,	1,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	46,	-1,	47,	-1,	0,	-1,	-1,	-1,	-1,	-1}};
-	static Pecas camadaPecas = new Pecas();
+	static PecasServidor camadaPecas = new PecasServidor();
 	
 	public GridLogic() {
-		
-		JLayeredPane camadas = new JLayeredPane();	//Organiza os gr�ficos que est�o aparecendo por camadas
+		camadas = new JLayeredPane();	//Organiza os gr�ficos que est�o aparecendo por camadas
+		camadas.setBounds(0, 0, 1000, 705);
 		
 		JFrame frame = new JFrame();
+		frame.add(camadas);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		frame.setLayout(null);
+		frame.setSize(1000, 745);
 		//frame.setLayout(new GridLayout(15, 15, 0, 0));
 		//frame.getContentPane().setBackground(Color.white);
 		
-		JPanel canvas1 = new JPanel();		
+		JPanel canvas1 = new JPanel();				//|Utilizado para limitar o tamanho que o tabuleiro ocupa
+		canvas1.setBounds(0, -5, 705, 710);
+		
 		
 		JPanel tabuleiro = new JPanel();
+		tabuleiro.setLayout(new GridLayout(15, 15, 0, 0));
+		tabuleiro.setBackground(Color.white);
 		//tabuleiro.setBounds(0, 0, 705, 705);
 		
 		for(int linha = 0; linha <15; linha++) {
 			for(int col = 0; col<15; col++) {
 				if((col==5 || col==7 || col==9)&&(linha<=5 || linha>=9)) {
-					tabuleiro.add(caminho[index[linha][col]] = new Casa(index[linha][col], linha, col, camadas));
+					tabuleiro.add(caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col, camadas));
 				}
 				else {
 					if((linha==5 || linha==7 || linha==9)&&(col<5 || col>9)) {
-						tabuleiro.add(caminho[index[linha][col]] = new Casa(index[linha][col], linha, col, camadas));
+						tabuleiro.add(caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col, camadas));
 					}
 					else {
 						if((col==5 || col==9)&&(linha==7)) {
-							tabuleiro.add(caminho[index[linha][col]] = new Casa(index[linha][col], linha, col, camadas));
+							tabuleiro.add(caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col, camadas));
 						}
 						else {
 							JPanel empty = new JPanel();
@@ -70,25 +84,17 @@ public class GridLogic {
 				}
 			}
 		}
+		DadosCliente dados = new DadosCliente();
 		
+		origens[0] = new OrigemServidor(0);
+		origens[1] = new OrigemServidor(1);
+		origens[2] = new OrigemServidor(2);
+		origens[3] = new OrigemServidor(3);
+
 		
-		
-		camadas.add(camadaPecas);
-		camadas.add(new Dados());
-		
-		
-		camadas.add(origens[0] = new Origem(0));
-		camadas.add(origens[1] = new Origem(1));
-		camadas.add(origens[2] = new Origem(2));
-		camadas.add(origens[3] = new Origem(3));
-		
-		camadas.add(centro);
-		Origem.camadasRef = camadas;
-		Centro.camadasRef = camadas;
-		
-		canvas1.add(tabuleiro);
-		camadas.add(canvas1);
-		
+		//frame.pack();
+		frame.setLocationRelativeTo(null);
+		frame.setVisible(false);
 	}
 	
 	public static int particular_real(int pos, int turno) {//0, amarelo -> 12
@@ -108,7 +114,7 @@ public class GridLogic {
 	}
 	
 	public static int avancar_casa(int pos, int n) {
-		return (particular_real(real_particular(pos, Dados.turno)+n, Dados.turno));
+		return (particular_real(real_particular(pos, DadosServidor.turno)+n, DadosServidor.turno));
 	}
 	
 	public static void verificar_colisao() {
@@ -118,14 +124,14 @@ public class GridLogic {
 				for(int i = 0; i < 4; i++) {
 					Stack<Integer> aux = new Stack<Integer>();
 					for(int j = 0; j < caminho[k].n_pecas[i]; j++) {
-						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x + 12*shift[i][0];
-						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][1] = caminho[k].y + 12*shift[i][1];
+						PecasServidor.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x + 12*shift[i][0];
+						PecasServidor.coordPeca[i][caminho[k].pecas.get(i).peek()][1] = caminho[k].y + 12*shift[i][1];
 						ServerLudo.mover_peca(i, caminho[k].pecas.get(i).peek(), caminho[k].x + 12*shift[i][0], caminho[k].y + 12*shift[i][1], caminho[k].n_pecas[i]);
 						aux.push(caminho[k].pecas.get(i).pop());
 					}
 					for(int j = 0; j < caminho[k].n_pecas[i]; j++) {
 						caminho[k].pecas.get(i).push(aux.peek());
-						Pecas.p_juntas[i][aux.pop()] = caminho[k].n_pecas[i];
+						PecasServidor.p_juntas[i][aux.pop()] = caminho[k].n_pecas[i];
 					}
 				}
 			}
@@ -133,14 +139,14 @@ public class GridLogic {
 				for(int i = 0; i < 4; i++) {
 					Stack<Integer> aux = new Stack<Integer>();
 					for(int j = 0; j < caminho[k].n_pecas[i]; j++) {
-						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x;
-						Pecas.coordPeca[i][caminho[k].pecas.get(i).peek()][1] = caminho[k].y;
+						PecasServidor.coordPeca[i][caminho[k].pecas.get(i).peek()][0] = caminho[k].x;
+						PecasServidor.coordPeca[i][caminho[k].pecas.get(i).peek()][1] = caminho[k].y;
 						ServerLudo.mover_peca(i, caminho[k].pecas.get(i).peek(), caminho[k].x, caminho[k].y, caminho[k].n_pecas[i]);
 						aux.push(caminho[k].pecas.get(i).pop());
 					}
 					for(int j = 0; j < caminho[k].n_pecas[i]; j++) {
 						caminho[k].pecas.get(i).push(aux.peek());
-						Pecas.p_juntas[i][aux.pop()] = caminho[k].n_pecas[i];
+						PecasServidor.p_juntas[i][aux.pop()] = caminho[k].n_pecas[i];
 					}
 				}
 			}
@@ -148,139 +154,141 @@ public class GridLogic {
 	}
 	
 	public static void verificar_jogada() {
-		switch (pertoCentro[Dados.turno]) {
+		switch (pertoCentro[DadosServidor.turno]) {
 		case 3:
-			if(Dados.dado1 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
-					(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
-					(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53)))
-				Dados.dado1usado = true;
-			if(Dados.dado2 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
-					(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
-					(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53)))
-				Dados.dado2usado = true;
+			if(DadosServidor.dado1 == 6 || ((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado1 > 53) && 
+					(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado1 > 53) &&
+					(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado1 > 53)))
+				DadosServidor.dado1usado = true;
+			if(DadosServidor.dado2 == 6 || ((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado2 > 53) && 
+					(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado2 > 53) &&
+					(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado2 > 53)))
+				DadosServidor.dado2usado = true;
 			break;
 		case 2:
-			if(centro.n_pecas[Dados.turno] == 1) {
-				if(Dados.dado1 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53)))
-					Dados.dado1usado = true;
-				if(Dados.dado2 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53)))
-					Dados.dado2usado = true;
+			if(centro.n_pecas[DadosServidor.turno] == 1) {
+				if(DadosServidor.dado1 == 6 || ((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado1 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado1 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado1 > 53)))
+					DadosServidor.dado1usado = true;
+				if(DadosServidor.dado2 == 6 || ((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado2 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado2 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado2 > 53)))
+					DadosServidor.dado2usado = true;
 			}
-			if(origens[Dados.turno].dentro == 1) {
-				if((Dados.dado1 == 6 && !Dados.dado1usado) || (Dados.dado2 == 6 && !Dados.dado2usado)) {
+			if(origens[DadosServidor.turno].dentro == 1) {
+				if((DadosServidor.dado1 == 6 && !DadosServidor.dado1usado) || (DadosServidor.dado2 == 6 && !DadosServidor.dado2usado)) {
 					//Ele pode gastar os dois dados na peca que ta fora.
 				}
 				else {
-					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53))
-							Dados.dado1usado = true;
-					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53))
-							Dados.dado2usado = true;
+					if((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado1 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado1 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado1 > 53))
+							DadosServidor.dado1usado = true;
+					if((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado2 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado2 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado2 > 53))
+							DadosServidor.dado2usado = true;
 				}
 			}
 			break;
 		case 1:
-			if(centro.n_pecas[Dados.turno] == 2) {
-				if(Dados.dado1 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
-										(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
-										(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53)))
-					Dados.dado1usado = true;
-				if(Dados.dado2 == 6 || ((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
-										(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
-										(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53)))
-					Dados.dado2usado = true;
+			if(centro.n_pecas[DadosServidor.turno] == 2) {
+				if(DadosServidor.dado1 == 6 || ((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado1 > 53) && 
+										(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado1 > 53) &&
+										(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado1 > 53)))
+					DadosServidor.dado1usado = true;
+				if(DadosServidor.dado2 == 6 || ((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado2 > 53) && 
+										(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado2 > 53) &&
+										(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado2 > 53)))
+					DadosServidor.dado2usado = true;
 			}
-			if(origens[Dados.turno].dentro == 2) {
-				if((Dados.dado1 == 6 && !Dados.dado1usado) || (Dados.dado2 == 6 && !Dados.dado2usado)) {
+			if(origens[DadosServidor.turno].dentro == 2) {
+				if((DadosServidor.dado1 == 6 && !DadosServidor.dado1usado) || (DadosServidor.dado2 == 6 && !DadosServidor.dado2usado)) {
 					//Ele pode gastar os dois dados na peca que ta fora.
 				}
 				else {
-					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53))
-							Dados.dado1usado = true;
-					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53))
-							Dados.dado2usado = true;
+					if((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado1 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado1 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado1 > 53))
+							DadosServidor.dado1usado = true;
+					if((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado2 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado2 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado2 > 53))
+							DadosServidor.dado2usado = true;
 				}
 			}
-			if(centro.n_pecas[Dados.turno] == 1 && origens[Dados.turno].dentro == 1) {
-				if((Dados.dado1 == 6 && !Dados.dado1usado) || (Dados.dado2 == 6 && !Dados.dado2usado)) {
+			if(centro.n_pecas[DadosServidor.turno] == 1 && origens[DadosServidor.turno].dentro == 1) {
+				if((DadosServidor.dado1 == 6 && !DadosServidor.dado1usado) || (DadosServidor.dado2 == 6 && !DadosServidor.dado2usado)) {
 					//Ele pode gastar os dois dados na peca que ta fora.
 				}
 				else {
-					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado1 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado1 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado1 > 53))
-							Dados.dado1usado = true;
-					if((Pecas.posPeca[Dados.turno][0] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][0], Dados.turno) + Dados.dado2 > 53) && 
-						(Pecas.posPeca[Dados.turno][1] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][1], Dados.turno) + Dados.dado2 > 53) &&
-						(Pecas.posPeca[Dados.turno][2] == -1 ||  real_particular(Pecas.posPeca[Dados.turno][2], Dados.turno) + Dados.dado2 > 53))
-							Dados.dado2usado = true;
+					if((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado1 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado1 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado1 > 53))
+							DadosServidor.dado1usado = true;
+					if((PecasServidor.posPeca[DadosServidor.turno][0] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][0], DadosServidor.turno) + DadosServidor.dado2 > 53) && 
+						(PecasServidor.posPeca[DadosServidor.turno][1] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][1], DadosServidor.turno) + DadosServidor.dado2 > 53) &&
+						(PecasServidor.posPeca[DadosServidor.turno][2] == -1 ||  real_particular(PecasServidor.posPeca[DadosServidor.turno][2], DadosServidor.turno) + DadosServidor.dado2 > 53))
+							DadosServidor.dado2usado = true;
 				}
 			}
 			break;
 		}
-		ServerLudo.atualizar_dados(Dados.dado1, Dados.dado1usado, Dados.dado2, Dados.dado2usado);
-		if(Dados.dado1usado && Dados.dado2usado)
-			Dados.proxTurno();
+		ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
+		if(DadosServidor.dado1usado && DadosServidor.dado2usado)
+			DadosServidor.proxTurno();
 	}
 	
 	public static void clickCasa(int pos) {
 		int avanco = 0;
 		if(caminho[pos].nascer == true) {
-			if(!Dados.dado1usado && Dados.dado1 == 6) {
+			if(!DadosServidor.dado1usado && DadosServidor.dado1 == 6) {
 				caminho[pos].nascer = false;
-				caminho[pos].n_pecas[Dados.turno]++;
-				caminho[pos].ColorNormal();
-				caminho[pos].pecas.get(Dados.turno).push(origens[Dados.turno].pecas.pop());
-				origens[Dados.turno].ColorNormal();
-				origens[Dados.turno].dentro--;
+				caminho[pos].n_pecas[DadosServidor.turno]++;
+				//caminho[pos].ColorNormal();
+				caminho[pos].pecas.get(DadosServidor.turno).push(origens[DadosServidor.turno].pecas.pop());
+				//origens[DadosServidor.turno].ColorNormal();
+				origens[DadosServidor.turno].dentro--;
 				movimentoIniciado = false;
-				Dados.dado1usado = true;
-				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+				DadosServidor.dado1usado = true;
+				PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
 				ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
 				ServerLudo.colorir_casa(pos, 0);
-				ServerLudo.disponivel_origem(origens[Dados.turno].possivel, movimentoIniciado);
+				ServerLudo.disponivel_origem(origens[DadosServidor.turno].possivel, movimentoIniciado);
 				ServerLudo.colorir_origem(0);
 				verificar_jogada();
+				verificar_colisao();
 				return;
 			}
 			else {
 				caminho[pos].nascer = false;
-				caminho[pos].n_pecas[Dados.turno]++;
-				caminho[pos].ColorNormal();
-				caminho[pos].pecas.get(Dados.turno).push(origens[Dados.turno].pecas.pop());
-				origens[Dados.turno].ColorNormal();
-				origens[Dados.turno].dentro--;
+				caminho[pos].n_pecas[DadosServidor.turno]++;
+				//caminho[pos].ColorNormal();
+				caminho[pos].pecas.get(DadosServidor.turno).push(origens[DadosServidor.turno].pecas.pop());
+				//origens[DadosServidor.turno].ColorNormal();
+				origens[DadosServidor.turno].dentro--;
 				movimentoIniciado = false;
-				Dados.dado2usado = true;
-				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+				DadosServidor.dado2usado = true;
+				PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
 				ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
 				ServerLudo.colorir_casa(pos, 0);
-				ServerLudo.disponivel_origem(origens[Dados.turno].possivel, movimentoIniciado);
+				ServerLudo.disponivel_origem(origens[DadosServidor.turno].possivel, movimentoIniciado);
 				ServerLudo.colorir_origem(0);
 				verificar_jogada();
+				verificar_colisao();
 				return;
 			}
 		}
 		if(caminho[pos].possivel) {
-			avanco = avancar_casa(pos, -Dados.dado1);
-			if(avanco >= 0 && !Dados.dado1usado && caminho[avanco].pecaSaindo) {
-				caminho[pos].ColorNormal();
+			avanco = avancar_casa(pos, -DadosServidor.dado1);
+			if(avanco >= 0 && !DadosServidor.dado1usado && caminho[avanco].pecaSaindo) {
+				//caminho[pos].ColorNormal();
 				caminho[pos].possivel = false;
-				caminho[pos].n_pecas[Dados.turno]++;
-				caminho[pos].pecas.get(Dados.turno).push(caminho[avanco].pecas.get(Dados.turno).pop());
-				caminho[avanco].n_pecas[Dados.turno]--;
-				caminho[avanco].ColorNormal();
+				caminho[pos].n_pecas[DadosServidor.turno]++;
+				caminho[pos].pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+				caminho[avanco].n_pecas[DadosServidor.turno]--;
+				//caminho[avanco].ColorNormal();
 				movimentoIniciado = false;
 				caminho[avanco].pecaSaindo = false;
 				//mensagem relativa a casa atual: pos
@@ -291,26 +299,26 @@ public class GridLogic {
 				ServerLudo.colorir_casa(avanco, 0);
 				
 				
-				if((real_particular(pos, Dados.turno) - Dados.dado1 + Dados.dado2) < 53) {
-					avanco = avancar_casa(pos, -Dados.dado1+Dados.dado2);
+				if((real_particular(pos, DadosServidor.turno) - DadosServidor.dado1 + DadosServidor.dado2) < 53) {
+					avanco = avancar_casa(pos, -DadosServidor.dado1+DadosServidor.dado2);
 					caminho[avanco].possivel = false;
-					caminho[avanco].ColorNormal();
+					//caminho[avanco].ColorNormal();
 					//mensagem relativa a casa posterior: avancar_casa(pos, -Dados.dado1+Dados.dado2)
 					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 					ServerLudo.colorir_casa(avanco, 0);
 				}
-				if(real_particular(pos, Dados.turno) + Dados.dado2 < 53) {
-					avanco = avancar_casa(pos, +Dados.dado2);
+				if(real_particular(pos, DadosServidor.turno) + DadosServidor.dado2 < 53) {
+					avanco = avancar_casa(pos, +DadosServidor.dado2);
 					caminho[avanco].possivel = false;
-					caminho[avanco].ColorNormal();
+					//caminho[avanco].ColorNormal();
 					//mensagem relativa a casa posterior: avancar_casa(pos, +Dados.dado2)
 					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 					ServerLudo.colorir_casa(avanco, 0);
 				}
-				Dados.dado1usado = true;
-				Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+				DadosServidor.dado1usado = true;
+				PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
 				
-				centro.Normal();
+				//centro.Normal();
 				centro.possivel = false;
 				//mensagem relativa ao centro
 				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
@@ -318,23 +326,23 @@ public class GridLogic {
 				
 				caminho[pos].kill();
 				if(pos >= 48) {
-					pertoCentro[Dados.turno] = 0;
+					pertoCentro[DadosServidor.turno] = 0;
 					for(int i=48; i<53; i++) {
-						pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+						pertoCentro[DadosServidor.turno] += caminho[particular_real(i, DadosServidor.turno)].n_pecas[DadosServidor.turno];
 					}
 				}
 				verificar_jogada();
 				
 			}
 			else {
-				avanco = avancar_casa(pos, -Dados.dado2);
-				if(avanco >= 0 && !Dados.dado2usado && caminho[avanco].pecaSaindo) {
-					caminho[pos].ColorNormal();
+				avanco = avancar_casa(pos, -DadosServidor.dado2);
+				if(avanco >= 0 && !DadosServidor.dado2usado && caminho[avanco].pecaSaindo) {
+					//caminho[pos].ColorNormal();
 					caminho[pos].possivel = false;
-					caminho[pos].n_pecas[Dados.turno]++;
-					caminho[pos].pecas.get(Dados.turno).push(caminho[avanco].pecas.get(Dados.turno).pop());
-					caminho[avanco].n_pecas[Dados.turno]--;
-					caminho[avanco].ColorNormal();
+					caminho[pos].n_pecas[DadosServidor.turno]++;
+					caminho[pos].pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+					caminho[avanco].n_pecas[DadosServidor.turno]--;
+					//caminho[avanco].ColorNormal();
 					movimentoIniciado = false;
 					caminho[avanco].pecaSaindo = false;
 					//mensagem relativa a casa atual: pos
@@ -344,26 +352,26 @@ public class GridLogic {
 					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 					ServerLudo.colorir_casa(avanco, 0);
 					
-					if(real_particular(pos, Dados.turno) - Dados.dado2 + Dados.dado1 < 53) {
-						avanco = avancar_casa(pos, -Dados.dado2+Dados.dado1);
+					if(real_particular(pos, DadosServidor.turno) - DadosServidor.dado2 + DadosServidor.dado1 < 53) {
+						avanco = avancar_casa(pos, -DadosServidor.dado2+DadosServidor.dado1);
 						caminho[avanco].possivel = false;
-						caminho[avanco].ColorNormal();
+						//caminho[avanco].ColorNormal();
 						//mensagem relativa a casa posterior: avanco
 						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 						ServerLudo.colorir_casa(avanco, 0);
 					}
-					if(real_particular(pos, Dados.turno) + Dados.dado1 < 53) {
-						avanco = avancar_casa(pos, +Dados.dado1);
+					if(real_particular(pos, DadosServidor.turno) + DadosServidor.dado1 < 53) {
+						avanco = avancar_casa(pos, +DadosServidor.dado1);
 						caminho[avanco].possivel = false;
-						caminho[avanco].ColorNormal();
+						//caminho[avanco].ColorNormal();
 						//mensagem relativa a casa posterior: avanco
 						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 						ServerLudo.colorir_casa(avanco, 0);
 					}
-					Dados.dado2usado = true;
-					Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+					DadosServidor.dado2usado = true;
+					PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
 					
-					centro.Normal();
+					//centro.Normal();
 					centro.possivel = false;
 					//mensagem relativa ao centro
 					ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
@@ -371,21 +379,21 @@ public class GridLogic {
 					
 					caminho[pos].kill();
 					if(pos >= 48) {
-						pertoCentro[Dados.turno] = 0;
+						pertoCentro[DadosServidor.turno] = 0;
 						for(int i = 48; i < 53; i++) {
-							pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+							pertoCentro[DadosServidor.turno] += caminho[particular_real(i, DadosServidor.turno)].n_pecas[DadosServidor.turno];
 						}
 					}
 					verificar_jogada();
 				}
 				else {
-					avanco = avancar_casa(pos, -Dados.dado1-Dados.dado2);
-					caminho[pos].ColorNormal();
+					avanco = avancar_casa(pos, -DadosServidor.dado1-DadosServidor.dado2);
+					//caminho[pos].ColorNormal();
 					caminho[pos].possivel = false;
-					caminho[pos].n_pecas[Dados.turno]++;
-					caminho[pos].pecas.get(Dados.turno).push(caminho[avanco].pecas.get(Dados.turno).pop());
-					caminho[avanco].n_pecas[Dados.turno]--;
-					caminho[avanco].ColorNormal();
+					caminho[pos].n_pecas[DadosServidor.turno]++;
+					caminho[pos].pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+					caminho[avanco].n_pecas[DadosServidor.turno]--;
+					//caminho[avanco].ColorNormal();
 					movimentoIniciado = false;
 					caminho[avanco].pecaSaindo = false;
 					//mensagem relativa a casa atual: pos
@@ -395,25 +403,25 @@ public class GridLogic {
 					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 					ServerLudo.colorir_casa(avanco, 0);
 					
-					avanco = avancar_casa(pos, -Dados.dado1);
+					avanco = avancar_casa(pos, -DadosServidor.dado1);
 					caminho[avanco].possivel = false;
-					caminho[avanco].ColorNormal();
+					//caminho[avanco].ColorNormal();
 					//mensagem relativa a casa posterior: avanco
 					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 					ServerLudo.colorir_casa(avanco, 0);
 					
-					avanco = avancar_casa(pos, -Dados.dado2);
+					avanco = avancar_casa(pos, -DadosServidor.dado2);
 					caminho[avanco].possivel = false;
-					caminho[avanco].ColorNormal();
+					//caminho[avanco].ColorNormal();
 					//mensagem relativa a casa posterior: avanco
 					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
 					ServerLudo.colorir_casa(avanco, 0);
 					
 					
-					Dados.dado1usado = Dados.dado2usado = true;
-					Pecas.posPeca[Dados.turno][caminho[pos].pecas.get(Dados.turno).peek()] = pos;
+					DadosServidor.dado1usado = DadosServidor.dado2usado = true;
+					PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
 					
-					centro.Normal();
+					//centro.Normal();
 					centro.possivel = false;
 					//mensagem relativa ao centro
 					ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
@@ -421,24 +429,24 @@ public class GridLogic {
 					
 					caminho[pos].kill();
 					if(pos >= 48) {
-						pertoCentro[Dados.turno] = 0;
+						pertoCentro[DadosServidor.turno] = 0;
 						for(int i=48; i<53; i++) {
-							pertoCentro[Dados.turno] += caminho[particular_real(i, Dados.turno)].n_pecas[Dados.turno];
+							pertoCentro[DadosServidor.turno] += caminho[particular_real(i, DadosServidor.turno)].n_pecas[DadosServidor.turno];
 						}
 					}
-					ServerLudo.atualizar_dados(Dados.dado1, Dados.dado1usado, Dados.dado2, Dados.dado2usado);
-					Dados.proxTurno();
+					ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
+					DadosServidor.proxTurno();
 				}
 			}
 		}
 		else {
-			if(!movimentoIniciado && caminho[pos].n_pecas[Dados.turno] > 0) {
-				if(!Dados.dado1usado && real_particular(pos, Dados.turno) + Dados.dado1 <= 53) {
-					if(real_particular(pos, Dados.turno) + Dados.dado1 == 53) {
+			if(!movimentoIniciado && caminho[pos].n_pecas[DadosServidor.turno] > 0) {
+				if(!DadosServidor.dado1usado && real_particular(pos, DadosServidor.turno) + DadosServidor.dado1 <= 53) {
+					if(real_particular(pos, DadosServidor.turno) + DadosServidor.dado1 == 53) {
 						//tratar
-						caminho[pos].ColorSelected();
+						//caminho[pos].ColorSelected();
 						caminho[pos].pecaSaindo = true;
-						centro.Selected();
+						//centro.Selected();
 						centro.possivel = true;
 						movimentoIniciado = true;
 						//mensagem relativa a casa atual: pos
@@ -450,9 +458,9 @@ public class GridLogic {
 						
 					}
 					else {
-						avanco = avancar_casa(pos, +Dados.dado1);
-						caminho[pos].ColorSelected();
-						caminho[avanco].ColorPossivel();
+						avanco = avancar_casa(pos, +DadosServidor.dado1);
+						//caminho[pos].ColorSelected();
+						//caminho[avanco].ColorPossivel();
 						caminho[avanco].possivel = true;
 						movimentoIniciado = true;
 						caminho[pos].pecaSaindo = true;
@@ -465,12 +473,12 @@ public class GridLogic {
 						ServerLudo.colorir_casa(avanco, 1);
 					}
 				}
-				if(!Dados.dado2usado && real_particular(pos, Dados.turno) + Dados.dado2 <= 53) {
-					if(real_particular(pos, Dados.turno) + Dados.dado2 == 53) {
+				if(!DadosServidor.dado2usado && real_particular(pos, DadosServidor.turno) + DadosServidor.dado2 <= 53) {
+					if(real_particular(pos, DadosServidor.turno) + DadosServidor.dado2 == 53) {
 						//tratar
-						caminho[pos].ColorSelected();
+						//caminho[pos].ColorSelected();
 						caminho[pos].pecaSaindo = true;
-						centro.Selected();
+						//centro.Selected();
 						centro.possivel = true;
 						movimentoIniciado = true;
 						
@@ -482,9 +490,9 @@ public class GridLogic {
 						ServerLudo.colorir_centro(1);
 					}
 					else {
-						avanco = avancar_casa(pos, +Dados.dado2);
-						caminho[pos].ColorSelected();
-						caminho[avanco].ColorPossivel();
+						avanco = avancar_casa(pos, +DadosServidor.dado2);
+						//caminho[pos].ColorSelected();
+						//caminho[avanco].ColorPossivel();
 						caminho[avanco].possivel = true;
 						movimentoIniciado = true;
 						caminho[pos].pecaSaindo = true;
@@ -497,12 +505,12 @@ public class GridLogic {
 						ServerLudo.colorir_casa(avanco, 1);
 					}
 				}
-				if(!Dados.dado1usado && !Dados.dado2usado && real_particular(pos, Dados.turno) + Dados.dado1 + Dados.dado2 <= 53) {
-					if(real_particular(pos, Dados.turno) + Dados.dado1 + Dados.dado2 == 53) {
+				if(!DadosServidor.dado1usado && !DadosServidor.dado2usado && real_particular(pos, DadosServidor.turno) + DadosServidor.dado1 + DadosServidor.dado2 <= 53) {
+					if(real_particular(pos, DadosServidor.turno) + DadosServidor.dado1 + DadosServidor.dado2 == 53) {
 						//tratar
-						caminho[pos].ColorSelected();
+						//caminho[pos].ColorSelected();
 						caminho[pos].pecaSaindo = true;
-						centro.Selected();
+						//centro.Selected();
 						centro.possivel = true;
 						movimentoIniciado = true;
 						
@@ -514,9 +522,9 @@ public class GridLogic {
 						ServerLudo.colorir_centro(1);
 					}
 					else {
-						avanco = avancar_casa(pos, +Dados.dado1+Dados.dado2);
-						caminho[pos].ColorSelected();
-						caminho[avanco].ColorPossivel();
+						avanco = avancar_casa(pos, +DadosServidor.dado1+DadosServidor.dado2);
+						//caminho[pos].ColorSelected();
+						//caminho[avanco].ColorPossivel();
 						caminho[avanco].possivel = true;
 						movimentoIniciado = true;
 						caminho[pos].pecaSaindo = true;
@@ -535,7 +543,7 @@ public class GridLogic {
 				for(int i = 0; i < 68; i++) {
 					if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
 						avanco = i;
-						caminho[i].ColorNormal();
+						//caminho[i].ColorNormal();
 						caminho[i].possivel = false;
 						caminho[i].pecaSaindo = false;
 						caminho[i].nascer = false;
@@ -544,19 +552,175 @@ public class GridLogic {
 						ServerLudo.colorir_casa(avanco, 0);
 					}
 				}
-				origens[Dados.turno].ColorNormal();
-				ServerLudo.disponivel_origem(origens[Dados.turno].possivel, movimentoIniciado);
+				//origens[DadosServidor.turno].ColorNormal();
+				ServerLudo.disponivel_origem(origens[DadosServidor.turno].possivel, movimentoIniciado);
 				ServerLudo.colorir_origem(0);
 				
-				centro.Normal();
+				//centro.Normal();
 				centro.possivel = false;	
 				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
 				ServerLudo.colorir_centro(0);
 			}
 		}
+		verificar_colisao();
 	}
 	
+	public static void clickCentro() {
+		int avanco = 0;
+		if((53 - DadosServidor.dado1) >= 47 && !DadosServidor.dado1usado && caminho[particular_real(53 - DadosServidor.dado1, DadosServidor.turno)].pecaSaindo) {
+			//centro.Normal();
+			centro.possivel = false;
+			centro.n_pecas[DadosServidor.turno]++;
+			avanco = particular_real(53 - DadosServidor.dado1, DadosServidor.turno);
+			centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+			caminho[avanco].n_pecas[DadosServidor.turno]--;
+			//caminho[avanco].ColorNormal();
+			caminho[avanco].pecaSaindo = false;
+			movimentoIniciado = false;
+			
+			//mensagem relativa a casa avanco
+			ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+			ServerLudo.colorir_casa(avanco, 0);
+			//mensagem relativa ao centro
+			ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+			ServerLudo.colorir_centro(0);
+			
+			for(int i=0; i<68; i++) {
+				if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
+					avanco = i;
+					//caminho[i].ColorNormal();
+					caminho[i].possivel = false;
+					caminho[i].pecaSaindo = false;
+					caminho[i].nascer = false;
+					//mensagem relativa a casa posterior: avanco
+					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+					ServerLudo.colorir_casa(avanco, 0);
+				}
+			}
+			
+			DadosServidor.dado1usado = true;
+			PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
+			PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
+			PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
+			ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
+			
+		}
+		else {
+			if((53 - DadosServidor.dado2) >= 47 && !DadosServidor.dado2usado && caminho[particular_real(53 - DadosServidor.dado2, DadosServidor.turno)].pecaSaindo) {
+				//centro.Normal();
+				centro.possivel = false;
+				centro.n_pecas[DadosServidor.turno]++;
+				avanco = particular_real(53 - DadosServidor.dado2, DadosServidor.turno);
+				centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+				caminho[avanco].n_pecas[DadosServidor.turno]--;
+				//caminho[avanco].ColorNormal();
+				caminho[avanco].pecaSaindo = false;
+				movimentoIniciado = false;
+				
+				//mensagem relativa a casa avanco
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+				//mensagem relativa ao centro
+				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+				ServerLudo.colorir_centro(0);
+				
+				for(int i=0; i<68; i++) {
+					if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
+						avanco = i;
+						//caminho[i].ColorNormal();
+						caminho[i].possivel = false;
+						caminho[i].pecaSaindo = false;
+						caminho[i].nascer = false;
+						//mensagem relativa a casa posterior: avanco
+						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+						ServerLudo.colorir_casa(avanco, 0);
+					}
+				}
+				
+				DadosServidor.dado2usado = true;
+				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
+				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
+				PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
+				ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
+			}
+			else {
+				//centro.Normal();
+				centro.possivel = false;
+				centro.n_pecas[DadosServidor.turno]++;
+				avanco = particular_real(53 - DadosServidor.dado1 - DadosServidor.dado2, DadosServidor.turno);
+				centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+				caminho[avanco].n_pecas[DadosServidor.turno]--;
+				//caminho[avanco].ColorNormal();
+				movimentoIniciado = false;
+				caminho[avanco].pecaSaindo = false;
+				//mensagem relativa ao centro
+				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+				ServerLudo.colorir_centro(0);
+				//mensagem relativa a casa avanco
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+				
+				avanco = particular_real(53 - DadosServidor.dado1, DadosServidor.turno);
+				caminho[avanco].possivel = false;
+				//caminho[avanco].ColorNormal();
+				//mensagem relativa a casa avanco
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+				
+				avanco = particular_real(53 - DadosServidor.dado2, DadosServidor.turno);
+				caminho[avanco].possivel = false;
+				//caminho[avanco].ColorNormal();
+				//mensagem relativa a casa avanco
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+				
+				DadosServidor.dado1usado = DadosServidor.dado2usado = true;
+				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
+				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
+				PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
+				ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
+			}
+		}
+		pertoCentro[DadosServidor.turno] = 0;
+		for(int i = 48; i < 53; i++) {
+			pertoCentro[DadosServidor.turno] += caminho[particular_real(i, DadosServidor.turno)].n_pecas[DadosServidor.turno];
+		}
+		ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
+		verificar_colisao();
+		verificar_jogada();
+	}
 	
+public static void clickOrigem(int cor) {
+		int avanco = 0;
+		if(DadosServidor.dado1 == 6 && !DadosServidor.dado1usado && !movimentoIniciado && origens[cor].dentro>0 && DadosServidor.turno == cor) {
+			avanco = particular_real(0, DadosServidor.turno);
+			//origens[cor].ColorSelected();
+			//caminho[avanco].ColorPossivel();
+			caminho[avanco].nascer = true;
+			movimentoIniciado = true;
+			
+			ServerLudo.disponivel_origem(origens[cor].possivel, movimentoIniciado);
+			ServerLudo.colorir_origem(1);
+			//mensagem relativa a casa avanco
+			ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+			ServerLudo.colorir_casa(avanco, 0);
+		}
+		else {
+			if(DadosServidor.dado2 == 6 && !DadosServidor.dado2usado && !movimentoIniciado && origens[cor].dentro>0 && DadosServidor.turno == cor) {
+				avanco = particular_real(0, DadosServidor.turno);
+				//origens[cor].ColorSelected();
+				//caminho[avanco].ColorPossivel();
+				caminho[avanco].nascer = true;
+				movimentoIniciado = true;
+				
+				ServerLudo.disponivel_origem(origens[cor].possivel, movimentoIniciado);
+				ServerLudo.colorir_origem(1);
+				//mensagem relativa a casa avanco
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+			}
+		}
+	}
 }
 
 

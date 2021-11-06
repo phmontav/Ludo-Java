@@ -16,7 +16,7 @@ public class Centro extends JPanel implements MouseListener{
 
 	public boolean possivel;
 	public int[] n_pecas = {0, 0, 0, 0};
-	List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
+	public List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
 	public static JLayeredPane camadasRef;
 	Image img_atual, img_normal, img_selected;
 	public static int[][][] posFinal = {{{6*47+25, 8*47-7}, {7*47, 8*47}, {8*47-25, 8*47-7}},

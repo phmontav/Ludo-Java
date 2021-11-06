@@ -1,19 +1,17 @@
 package cliente;
-import graficos.*;
 //comentario dummy
 import java.awt.Color;
 import java.awt.GridLayout;
-import java.util.Stack;
-
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class Grid {
-	static Casa caminho[] = new Casa[68];		//Vetor com todas as casas do tabuleiro
-	static Origem origens[] = new Origem[4];
-	static Centro centro = new Centro();
+	static CasaCliente caminho[] = new CasaCliente[68];		//Vetor com todas as casas do tabuleiro
+	static OrigemCliente origens[] = new OrigemCliente[4];
+	static CentroCliente centro = new CentroCliente();
+	static JLayeredPane camadas;
+	static DadosCliente dados;
 	static int[] pertoCentro = new int[4];
 	static boolean movimentoIniciado = false;	//True quando uma pe�a est� sendo movida de uma casa para outra
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
@@ -31,11 +29,11 @@ public class Grid {
 					 		{-1, -1,	-1,	-1,	-1,	44,	-1,	49,	-1,	2,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	45,	-1,	48,	-1,	1,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	46,	-1,	47,	-1,	0,	-1,	-1,	-1,	-1,	-1}};
-	static Pecas camadaPecas = new Pecas();
+	static PecasCliente camadaPecas = new PecasCliente();
 	
 	public Grid() {
 		
-		JLayeredPane camadas = new JLayeredPane();	//Organiza os gr�ficos que est�o aparecendo por camadas
+		camadas = new JLayeredPane();	//Organiza os gr�ficos que est�o aparecendo por camadas
 		camadas.setBounds(0, 0, 1000, 705);
 		
 		JFrame frame = new JFrame();
@@ -59,15 +57,15 @@ public class Grid {
 		for(int linha = 0; linha <15; linha++) {
 			for(int col = 0; col<15; col++) {
 				if((col==5 || col==7 || col==9)&&(linha<=5 || linha>=9)) {
-					tabuleiro.add(caminho[index[linha][col]] = new Casa(index[linha][col], linha, col, camadas));
+					tabuleiro.add(caminho[index[linha][col]] = new CasaCliente(index[linha][col], linha, col, camadas));
 				}
 				else {
 					if((linha==5 || linha==7 || linha==9)&&(col<5 || col>9)) {
-						tabuleiro.add(caminho[index[linha][col]] = new Casa(index[linha][col], linha, col, camadas));
+						tabuleiro.add(caminho[index[linha][col]] = new CasaCliente(index[linha][col], linha, col, camadas));
 					}
 					else {
 						if((col==5 || col==9)&&(linha==7)) {
-							tabuleiro.add(caminho[index[linha][col]] = new Casa(index[linha][col], linha, col, camadas));
+							tabuleiro.add(caminho[index[linha][col]] = new CasaCliente(index[linha][col], linha, col, camadas));
 						}
 						else {
 							JPanel empty = new JPanel();
@@ -82,17 +80,18 @@ public class Grid {
 		
 
 		camadas.add(camadaPecas);
-		camadas.add(new Dados());
+		dados = new DadosCliente();
+		camadas.add(dados);
 		
 		
-		camadas.add(origens[0] = new Origem(0));
-		camadas.add(origens[1] = new Origem(1));
-		camadas.add(origens[2] = new Origem(2));
-		camadas.add(origens[3] = new Origem(3));
+		camadas.add(origens[0] = new OrigemCliente(0));
+		camadas.add(origens[1] = new OrigemCliente(1));
+		camadas.add(origens[2] = new OrigemCliente(2));
+		camadas.add(origens[3] = new OrigemCliente(3));
 		
 		camadas.add(centro);
-		Origem.camadasRef = camadas;
-		Centro.camadasRef = camadas;
+		OrigemCliente.camadasRef = camadas;
+		CentroCliente.camadasRef = camadas;
 		
 		canvas1.add(tabuleiro);
 		camadas.add(canvas1);
