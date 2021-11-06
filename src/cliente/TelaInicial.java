@@ -1,4 +1,4 @@
-package game;
+package cliente;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -90,7 +90,7 @@ public class TelaInicial implements ActionListener{
 	    public void actionPerformed(ActionEvent e)
 	    {
 	    	try {
-				ClientTest.Conectar(enderecoIP.getText(), apelido.getText());
+	    		ClientLudo.Conectar(enderecoIP.getText(), apelido.getText());
 			} catch (UnknownHostException e1) {
 				System.out.println("Insira IP válido e tente novamente.");
 			} catch (IOException e1) {

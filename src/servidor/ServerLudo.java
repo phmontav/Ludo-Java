@@ -1,6 +1,5 @@
 package servidor;
 
-import game.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -25,6 +24,7 @@ public class ServerLudo {
 	static public int[] statusJogadores = {0, 0, 0, 0};
 	private static ExecutorService pool = Executors.newFixedThreadPool(4);
 	public static volatile boolean esperarConexao = true;
+	static GridLogic tabuleiro;
 	
 	public static void main(String[] args) throws IOException {
 		ServerSocket listener = new ServerSocket(PORT);
@@ -70,7 +70,8 @@ public class ServerLudo {
 			qtConectada++;
 		}
 		while(qtConectada == 4 && esperarConexao) {}
-		outToAll("STATUS__JOGADORES " + ServerTest.statusJogadores[0] + " " + ServerTest.statusJogadores[1] + " " + ServerTest.statusJogadores[2] + " " + ServerTest.statusJogadores[3] + " 1");
+		outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 1");
+		tabuleiro = new GridLogic();
 		while(true) {
 			
 		}
@@ -93,11 +94,14 @@ public class ServerLudo {
 	}
 	
 	public static void mover_peca(int cor, int peca_id, int peca_x, int peca_y, int peca_qtd) {
-		outToAll("MOVER________PECA " + turnoAtual + " " + cor + " " + peca_id + " " + peca_x + " " + peca_y + " " + peca_qtd);
+		String x = String.format("%03d", peca_x);
+		String y = String.format("%03d", peca_y);
+		outToAll("MOVER________PECA " + turnoAtual + " " + cor + " " + peca_id + " " + x + " " + y + " " + peca_qtd);
 	}
 
 	public static void colorir_casa(int pos, int cor) {
-		outToAll("COLORIR______CASA " + turnoAtual + " " + pos + " " + cor);
+		String uni = String.format("%02d", pos);
+		outToAll("COLORIR______CASA " + turnoAtual + " " + uni + " " + cor);
 	}
 
 	public static void disponivel_casa(int pos, boolean possivel, boolean nascer, boolean pecaSaindo, boolean movimentoIniciado) {
@@ -106,7 +110,8 @@ public class ServerLudo {
 		if(nascer) nascerInt = 1;
 		if(pecaSaindo) pecaSaindoInt = 1;
 		if(movimentoIniciado) movimentoIniciadoInt = 1;
-		outToAll("DISPONIVEL___CASA " + turnoAtual + " " + pos + " " + possivelInt + " " + nascerInt + " " + pecaSaindoInt + " " + movimentoIniciadoInt);
+		String uni = String.format("%02d", pos);
+		outToAll("DISPONIVEL___CASA " + turnoAtual + " " + uni + " " + possivelInt + " " + nascerInt + " " + pecaSaindoInt + " " + movimentoIniciadoInt);
 	}
 	
 	public static void colorir_origem(int cor) {

@@ -1,4 +1,4 @@
-package game;
+package cliente;
 
 import java.awt.Color;
 import java.awt.Font;
@@ -18,7 +18,7 @@ public class TelaConexao implements Runnable, ActionListener{
 	static JButton botao = new JButton("PRONTO");
 	static JPanel panel = new JPanel();
 	//ImageIcon fundo = new ImageIcon("TelaInicialLudo.png");
-	static JLabel voce = new JLabel("Voc� � o Jogador " + (ClientTest.ID+1));
+	static JLabel voce = new JLabel("Voc� � o Jogador " + (ClientLudo.ID+1));
 	static JLabel[] j = new JLabel[4];
 	static JLabel[] j_conect = new JLabel[4];
 	static JLabel[] j_pronto = new JLabel[4];
@@ -122,6 +122,6 @@ public class TelaConexao implements Runnable, ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		serverConn.enviarMensagem("INICIAR_JOGO " + ClientTest.ID + " 1");
+		serverConn.enviarMensagem("INICIAR_JOGO " + ClientLudo.ID + " 1");
 	}
 }
