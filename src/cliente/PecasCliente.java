@@ -1,9 +1,6 @@
 package cliente;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 
 import javax.swing.ImageIcon;
@@ -38,10 +35,6 @@ public class PecasCliente extends JPanel {
 		img_vd[0] = new ImageIcon("PecaVerde.png").getImage();
 		img_vd[1] = new ImageIcon("PecaVerde2.png").getImage();
 		img_vd[2] = new ImageIcon("PecaVerde3.png").getImage();
-		
-	}
-	
-	static void numerar(int turno, int n, int peca) {
 		
 	}
 	

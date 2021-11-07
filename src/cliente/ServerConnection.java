@@ -6,9 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-import graficos.Dados;
-import servidor.PecasServidor;
-
 public class ServerConnection implements Runnable{
 
 	private Socket server;
@@ -40,7 +37,7 @@ public class ServerConnection implements Runnable{
 				interpretarMensagem(serverResponse);
 				if(serverResponse == null) break;
 				
-				System.out.println(serverResponse);
+				//System.out.println(serverResponse);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -200,6 +197,9 @@ public class ServerConnection implements Runnable{
 			PecasCliente.p_juntas[id_cor][id_peca] = img;
 			Grid.camadas.repaint();
 			return;
+		}
+		if(msg.startsWith("ANIMAR______DADOS")) {
+			Grid.dados.animacao();
 		}
 	}
 	

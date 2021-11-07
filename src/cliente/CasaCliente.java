@@ -15,7 +15,7 @@ import javax.swing.JPanel;
 
 public class CasaCliente extends JPanel implements MouseListener{
 	
-	public int pos;			//ID da posi��o desta casa-------------------------------Cli
+	public int pos;
 	public int x, y;																//---Serv?
 	public int[] n_pecas = {0, 0, 0, 0};		//Array com numero de pecas de cada cor--Serv
 	public List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();	//-----------Serv
@@ -26,7 +26,7 @@ public class CasaCliente extends JPanel implements MouseListener{
 	Color tint = new Color(0xcbc0d3);
 	Color tintPossivel = new Color(0x785964);
 	Color tintSelected = new Color(0x785964);
-	Color atual = new Color(0xcbc0d3);		//-----------------------------------Cli
+	Color atual = new Color(0xcbc0d3);
 	
 	public CasaCliente(int n, int y_n, int x_n, JLayeredPane camadas){
 		this.setPreferredSize(new Dimension(47, 47));
@@ -66,60 +66,25 @@ public class CasaCliente extends JPanel implements MouseListener{
 		atual = tintSelected;
 		repaint();
 	}
-	
-	public void kill() {
-		if(pos != 0 && pos != 12 && pos != 24 && pos != 36) {
-			for(int i=0; i<4; i++) {
-				if(n_pecas[i] > 0 && i != DadosCliente.turno) {
-					while(n_pecas[i] > 0) {
-						
-						PecasCliente.coordPeca[i][pecas.get(i).peek()][0] = PecasCliente.backup[i][pecas.get(i).peek()][0];
-						PecasCliente.coordPeca[i][pecas.get(i).peek()][1] = PecasCliente.backup[i][pecas.get(i).peek()][1];
-						PecasCliente.posPeca[i][pecas.get(i).peek()] = -1;
-						n_pecas[i]--;
-						Grid.origens[i].dentro++;
-						Grid.origens[i].pecas.push(pecas.get(i).peek());
-						PecasCliente.p_juntas[i][pecas.get(i).pop()] = 1;
-						camadasRef.repaint();
-					}
-				}
-			}
-		}
-	}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		
-		/*Grid.clickCasa(pos);
-		Grid.verificar_colisao();*/
 		if(ServerConnection.ID == ServerConnection.turnoAtual)
 		{
 			ClientLudo.clicar_casa(pos);
-			//camadasRef.repaint();
 		}
-		
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 }

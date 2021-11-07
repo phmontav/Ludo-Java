@@ -15,7 +15,6 @@ import javax.swing.JPanel;
 public class CentroCliente extends JPanel implements MouseListener{
 
 	public boolean possivel;
-	public int[] n_pecas = {0, 0, 0, 0};
 	public List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
 	public static JLayeredPane camadasRef;
 	Image img_atual, img_normal, img_selected;
@@ -51,19 +50,12 @@ public class CentroCliente extends JPanel implements MouseListener{
 		img_atual = img_normal;
 		repaint();
 	}
-	
-	
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -74,14 +66,8 @@ public class CentroCliente extends JPanel implements MouseListener{
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 }

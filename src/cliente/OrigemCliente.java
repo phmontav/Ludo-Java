@@ -1,7 +1,6 @@
 package cliente;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.MouseEvent;
@@ -21,8 +20,6 @@ public class OrigemCliente extends JPanel implements MouseListener{
 	public static JLayeredPane camadasRef;
 
 	public OrigemCliente(int n){
-		//this.setPreferredSize(new Dimension(47, 47));
-		//this.setPreferredSize(new Dimension(200, 200));
 		
 		cor = n;
 		possivel = false;
@@ -56,9 +53,6 @@ public class OrigemCliente extends JPanel implements MouseListener{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2d = (Graphics2D) g;
-		
-		//g2d.draw
-		
 		g2d.setColor(atual);
 		g2d.fillOval(0, 0, 141, 141);
 	}
@@ -73,37 +67,23 @@ public class OrigemCliente extends JPanel implements MouseListener{
 		repaint();
 	}
 	
-	
+	@Override
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		if(ServerConnection.ID == ServerConnection.turnoAtual && cor == ServerConnection.ID)
 		{
 			ClientLudo.clica_origem();
-			//camadasRef.repaint();
 		}
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent e) {}
 }

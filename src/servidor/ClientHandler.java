@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Scanner;
-
-import cliente.Grid;
-import cliente.TelaConexao;
 
 public class ClientHandler implements Runnable {
 
@@ -24,7 +20,6 @@ public class ClientHandler implements Runnable {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
 		String clientRequest;
 		try {
 			while(true) {
@@ -34,10 +29,7 @@ public class ClientHandler implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//ServerLudo.outToAll( x );
-		
 		//out.close();
-		//sc.close();
 	}
 	
 	private void interpretarMensagem(String msg) throws IOException {
@@ -89,7 +81,5 @@ public class ClientHandler implements Runnable {
 				GridLogic.clickCentro();
 			return;
 		}
-			
 	}
-	
 }
