@@ -98,23 +98,23 @@ public class GridLogic {
 	}
 	
 	public static int particular_real(int pos, int turno) {//0, amarelo -> 12
-		if(pos >= 0 && pos < (12 * (4 - turno)))
+		if(pos >= 0 && pos < (12*(4 - turno)))
 			return (pos + turno*12);
-		if(pos >= (12*(4-turno)) && pos<48)
-			return (pos-(12*(4-turno)));
-		return (pos+turno*5);
+		if(pos >= (12*(4 - turno)) && pos < 48)
+			return (pos - (12*(4 - turno)));
+		return (pos + turno*5);
 	}
 	
 	public static int real_particular(int pos, int turno) {//12, amarelo -> 0
-		if(pos>=turno*12 && pos<48)
-			return (pos-turno*12);
-		if(pos<turno*12)
-			return (pos+12*(4-turno));
-		return (pos-turno*5);
+		if(pos >= turno*12 && pos < 48)
+			return (pos - turno*12);
+		if(pos < turno*12)
+			return (pos + 12*(4 - turno));
+		return (pos - turno*5);
 	}
 	
 	public static int avancar_casa(int pos, int n) {
-		return (particular_real(real_particular(pos, DadosServidor.turno)+n, DadosServidor.turno));
+		return (particular_real(real_particular(pos, DadosServidor.turno) + n, DadosServidor.turno));
 	}
 	
 	public static void verificar_colisao() {
@@ -240,41 +240,34 @@ public class GridLogic {
 			DadosServidor.proxTurno();
 	}
 	
+	public static void nascerCasa(int pos) {
+		caminho[pos].nascer = false;
+		caminho[pos].n_pecas[DadosServidor.turno]++;
+		//caminho[pos].ColorNormal();
+		caminho[pos].pecas.get(DadosServidor.turno).push(origens[DadosServidor.turno].pecas.pop());
+		//origens[DadosServidor.turno].ColorNormal();
+		origens[DadosServidor.turno].dentro--;
+		movimentoIniciado = false;
+		PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
+		ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
+		ServerLudo.colorir_casa(pos, 0);
+		ServerLudo.disponivel_origem(origens[DadosServidor.turno].possivel, movimentoIniciado);
+		ServerLudo.colorir_origem(0);
+	}
+	
 	public static void clickCasa(int pos) {
 		int avanco = 0;
 		if(caminho[pos].nascer == true) {
 			if(!DadosServidor.dado1usado && DadosServidor.dado1 == 6) {
-				caminho[pos].nascer = false;
-				caminho[pos].n_pecas[DadosServidor.turno]++;
-				//caminho[pos].ColorNormal();
-				caminho[pos].pecas.get(DadosServidor.turno).push(origens[DadosServidor.turno].pecas.pop());
-				//origens[DadosServidor.turno].ColorNormal();
-				origens[DadosServidor.turno].dentro--;
-				movimentoIniciado = false;
+				nascerCasa(pos);
 				DadosServidor.dado1usado = true;
-				PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
-				ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(pos, 0);
-				ServerLudo.disponivel_origem(origens[DadosServidor.turno].possivel, movimentoIniciado);
-				ServerLudo.colorir_origem(0);
 				verificar_jogada();
 				verificar_colisao();
 				return;
 			}
 			else {
-				caminho[pos].nascer = false;
-				caminho[pos].n_pecas[DadosServidor.turno]++;
-				//caminho[pos].ColorNormal();
-				caminho[pos].pecas.get(DadosServidor.turno).push(origens[DadosServidor.turno].pecas.pop());
-				//origens[DadosServidor.turno].ColorNormal();
-				origens[DadosServidor.turno].dentro--;
-				movimentoIniciado = false;
+				nascerCasa(pos);
 				DadosServidor.dado2usado = true;
-				PecasServidor.posPeca[DadosServidor.turno][caminho[pos].pecas.get(DadosServidor.turno).peek()] = pos;
-				ServerLudo.disponivel_casa(pos, caminho[pos].possivel, caminho[pos].nascer, caminho[pos].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(pos, 0);
-				ServerLudo.disponivel_origem(origens[DadosServidor.turno].possivel, movimentoIniciado);
-				ServerLudo.colorir_origem(0);
 				verificar_jogada();
 				verificar_colisao();
 				return;
@@ -626,6 +619,7 @@ public class GridLogic {
 		verificar_colisao();
 		verificar_jogada();
 	}
+	
 	
 	public static void playOrigem(int cor, int avanco) {
 		caminho[avanco].nascer = true;
