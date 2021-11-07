@@ -152,7 +152,7 @@ public class GridLogic {
 			}
 		}
 	}
-	
+ 	
 	public static void verificar_jogada() {
 		switch (pertoCentro[DadosServidor.turno]) {
 		case 3:
@@ -565,120 +565,57 @@ public class GridLogic {
 		verificar_colisao();
 	}
 	
+	public static void playCentro(int avanco) {
+		centro.possivel = false;
+		centro.n_pecas[DadosServidor.turno]++;
+		centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
+		caminho[avanco].n_pecas[DadosServidor.turno]--;
+		caminho[avanco].pecaSaindo = false;
+		movimentoIniciado = false;
+		
+		//mensagem relativa a casa avanco
+		ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+		ServerLudo.colorir_casa(avanco, 0);
+		//mensagem relativa ao centro
+		ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
+		ServerLudo.colorir_centro(0);
+		
+		for(int i = 0; i < 68; i++) {
+			if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
+				avanco = i;
+				caminho[i].possivel = false;
+				caminho[i].pecaSaindo = false;
+				caminho[i].nascer = false;
+				//mensagem relativa a casa posterior: avanco
+				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+				ServerLudo.colorir_casa(avanco, 0);
+			}
+		}
+		
+		PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
+		PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
+		PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
+		ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
+
+	}
+	
 	public static void clickCentro() {
 		int avanco = 0;
 		if((53 - DadosServidor.dado1) >= 47 && !DadosServidor.dado1usado && caminho[particular_real(53 - DadosServidor.dado1, DadosServidor.turno)].pecaSaindo) {
-			//centro.Normal();
-			centro.possivel = false;
-			centro.n_pecas[DadosServidor.turno]++;
 			avanco = particular_real(53 - DadosServidor.dado1, DadosServidor.turno);
-			centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
-			caminho[avanco].n_pecas[DadosServidor.turno]--;
-			//caminho[avanco].ColorNormal();
-			caminho[avanco].pecaSaindo = false;
-			movimentoIniciado = false;
-			
-			//mensagem relativa a casa avanco
-			ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-			ServerLudo.colorir_casa(avanco, 0);
-			//mensagem relativa ao centro
-			ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
-			ServerLudo.colorir_centro(0);
-			
-			for(int i=0; i<68; i++) {
-				if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
-					avanco = i;
-					//caminho[i].ColorNormal();
-					caminho[i].possivel = false;
-					caminho[i].pecaSaindo = false;
-					caminho[i].nascer = false;
-					//mensagem relativa a casa posterior: avanco
-					ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-					ServerLudo.colorir_casa(avanco, 0);
-				}
-			}
-			
+			playCentro(avanco);
 			DadosServidor.dado1usado = true;
-			PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
-			PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
-			PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
-			ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
-			
 		}
 		else {
 			if((53 - DadosServidor.dado2) >= 47 && !DadosServidor.dado2usado && caminho[particular_real(53 - DadosServidor.dado2, DadosServidor.turno)].pecaSaindo) {
-				//centro.Normal();
-				centro.possivel = false;
-				centro.n_pecas[DadosServidor.turno]++;
 				avanco = particular_real(53 - DadosServidor.dado2, DadosServidor.turno);
-				centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
-				caminho[avanco].n_pecas[DadosServidor.turno]--;
-				//caminho[avanco].ColorNormal();
-				caminho[avanco].pecaSaindo = false;
-				movimentoIniciado = false;
-				
-				//mensagem relativa a casa avanco
-				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(avanco, 0);
-				//mensagem relativa ao centro
-				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
-				ServerLudo.colorir_centro(0);
-				
-				for(int i=0; i<68; i++) {
-					if(caminho[i].possivel == true || caminho[i].pecaSaindo == true || caminho[i].nascer == true) {
-						avanco = i;
-						//caminho[i].ColorNormal();
-						caminho[i].possivel = false;
-						caminho[i].pecaSaindo = false;
-						caminho[i].nascer = false;
-						//mensagem relativa a casa posterior: avanco
-						ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-						ServerLudo.colorir_casa(avanco, 0);
-					}
-				}
-				
+				playCentro(avanco);
 				DadosServidor.dado2usado = true;
-				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
-				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
-				PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
-				ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
 			}
 			else {
-				//centro.Normal();
-				centro.possivel = false;
-				centro.n_pecas[DadosServidor.turno]++;
 				avanco = particular_real(53 - DadosServidor.dado1 - DadosServidor.dado2, DadosServidor.turno);
-				centro.pecas.get(DadosServidor.turno).push(caminho[avanco].pecas.get(DadosServidor.turno).pop());
-				caminho[avanco].n_pecas[DadosServidor.turno]--;
-				//caminho[avanco].ColorNormal();
-				movimentoIniciado = false;
-				caminho[avanco].pecaSaindo = false;
-				//mensagem relativa ao centro
-				ServerLudo.disponivel_centro(centro.possivel, movimentoIniciado);
-				ServerLudo.colorir_centro(0);
-				//mensagem relativa a casa avanco
-				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(avanco, 0);
-				
-				avanco = particular_real(53 - DadosServidor.dado1, DadosServidor.turno);
-				caminho[avanco].possivel = false;
-				//caminho[avanco].ColorNormal();
-				//mensagem relativa a casa avanco
-				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(avanco, 0);
-				
-				avanco = particular_real(53 - DadosServidor.dado2, DadosServidor.turno);
-				caminho[avanco].possivel = false;
-				//caminho[avanco].ColorNormal();
-				//mensagem relativa a casa avanco
-				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(avanco, 0);
-				
+				playCentro(avanco);
 				DadosServidor.dado1usado = DadosServidor.dado2usado = true;
-				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0];
-				PecasServidor.coordPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1] = CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1];
-				PecasServidor.posPeca[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()] = -1;
-				ServerLudo.mover_peca(DadosServidor.turno, centro.pecas.get(DadosServidor.turno).peek(), CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][0], CentroServidor.posFinal[DadosServidor.turno][centro.pecas.get(DadosServidor.turno).peek()][1], 1);
 			}
 		}
 		pertoCentro[DadosServidor.turno] = 0;
@@ -690,36 +627,29 @@ public class GridLogic {
 		verificar_jogada();
 	}
 	
-public static void clickOrigem(int cor) {
+	public static void playOrigem(int cor, int avanco) {
+		caminho[avanco].nascer = true;
+		movimentoIniciado = true;
+		
+		ServerLudo.disponivel_origem(origens[cor].possivel, movimentoIniciado);
+		ServerLudo.colorir_origem(1);
+		
+		//mensagem relativa a casa avanco
+		ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
+		ServerLudo.colorir_casa(avanco, 0);
+	}
+	
+	public static void clickOrigem(int cor) {
 		int avanco = 0;
-		if(DadosServidor.dado1 == 6 && !DadosServidor.dado1usado && !movimentoIniciado && origens[cor].dentro>0 && DadosServidor.turno == cor) {
+		if(DadosServidor.dado1 == 6 && !DadosServidor.dado1usado && !movimentoIniciado && origens[cor].dentro > 0 && DadosServidor.turno == cor) {
 			avanco = particular_real(0, DadosServidor.turno);
-			//origens[cor].ColorSelected();
-			//caminho[avanco].ColorPossivel();
-			caminho[avanco].nascer = true;
-			movimentoIniciado = true;
-			
-			ServerLudo.disponivel_origem(origens[cor].possivel, movimentoIniciado);
-			ServerLudo.colorir_origem(1);
-			//mensagem relativa a casa avanco
-			ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-			ServerLudo.colorir_casa(avanco, 0);
+			playOrigem(cor, avanco);
 		}
-		else {
-			if(DadosServidor.dado2 == 6 && !DadosServidor.dado2usado && !movimentoIniciado && origens[cor].dentro>0 && DadosServidor.turno == cor) {
-				avanco = particular_real(0, DadosServidor.turno);
-				//origens[cor].ColorSelected();
-				//caminho[avanco].ColorPossivel();
-				caminho[avanco].nascer = true;
-				movimentoIniciado = true;
-				
-				ServerLudo.disponivel_origem(origens[cor].possivel, movimentoIniciado);
-				ServerLudo.colorir_origem(1);
-				//mensagem relativa a casa avanco
-				ServerLudo.disponivel_casa(avanco, caminho[avanco].possivel, caminho[avanco].nascer, caminho[avanco].pecaSaindo, movimentoIniciado);
-				ServerLudo.colorir_casa(avanco, 0);
-			}
+		else if(DadosServidor.dado2 == 6 && !DadosServidor.dado2usado && !movimentoIniciado && origens[cor].dentro>0 && DadosServidor.turno == cor) {
+			avanco = particular_real(0, DadosServidor.turno);
+			playOrigem(cor, avanco);
 		}
+		
 	}
 }
 
