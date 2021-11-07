@@ -5,11 +5,9 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 public class TelaConexao implements Runnable, ActionListener{
@@ -25,7 +23,6 @@ public class TelaConexao implements Runnable, ActionListener{
 	
 	ServerConnection serverConn;
 	static int[] jStatusBackup = {0, 0, 0, 0};
-
 
 	TelaConexao(ServerConnection serverConn) {	
 		this.serverConn = serverConn;
@@ -64,12 +61,10 @@ public class TelaConexao implements Runnable, ActionListener{
 			j[i].setFont(new Font("Arial", Font.BOLD, 30));
 			
 			j_conect[i].setBounds(170, 200+70*i, 200, 50);
-			//j_conect[i].setText(" esperando ");
 			j_conect[i].setFont(new Font("Arial", Font.BOLD, 30));
 			j_conect[i].setForeground(Color.red);
 			
 			j_pronto[i].setBounds(370, 200+70*i, 200, 50);
-			//j_pronto[i].setText("n�o pronto");
 			j_pronto[i].setFont(new Font("Arial", Font.BOLD, 30));
 			j_pronto[i].setForeground(Color.red);
 			
@@ -88,7 +83,7 @@ public class TelaConexao implements Runnable, ActionListener{
 	}
 
 	static public void atualizar(int id, int[] jStatus) {
-		voce.setText("Voc� � o Jogador " + (id+1));
+		voce.setText("Voce eh o Jogador " + (id+1));
 		jStatusBackup = jStatus;
 	}
 
@@ -100,13 +95,13 @@ public class TelaConexao implements Runnable, ActionListener{
 				case 0:
 					j_conect[i].setText(" esperando ");
 					j_conect[i].setForeground(Color.red);
-					j_pronto[i].setText("n�o pronto");
+					j_pronto[i].setText("nao pronto");
 					j_pronto[i].setForeground(Color.red);
 					break;
 				case 1:
 					j_conect[i].setText(" conectado ");
 					j_conect[i].setForeground(Color.green);
-					j_pronto[i].setText("n�o pronto");
+					j_pronto[i].setText("nao pronto");
 					j_pronto[i].setForeground(Color.red);
 					break;
 				case 2:

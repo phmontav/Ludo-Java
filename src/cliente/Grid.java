@@ -1,5 +1,5 @@
 package cliente;
-//comentario dummy
+
 import java.awt.Color;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
@@ -13,7 +13,7 @@ public class Grid {
 	static JLayeredPane camadas;
 	static DadosCliente dados;
 	static int[] pertoCentro = new int[4];
-	static boolean movimentoIniciado = false;	//True quando uma pe�a est� sendo movida de uma casa para outra
+	static boolean movimentoIniciado = false;	//True quando uma peca esta sendo movida de uma casa para outra
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	25,	-1,	58,	-1,	21,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	26,	-1,	59,	-1,	20,	-1,	-1,	-1,	-1,	-1},
@@ -33,7 +33,7 @@ public class Grid {
 	
 	public Grid() {
 		
-		camadas = new JLayeredPane();	//Organiza os gr�ficos que est�o aparecendo por camadas
+		camadas = new JLayeredPane();	//Organiza os graficos que estao aparecendo por camadas
 		camadas.setBounds(0, 0, 1000, 705);
 		
 		JFrame frame = new JFrame();
@@ -42,8 +42,6 @@ public class Grid {
 		frame.setResizable(false);
 		frame.setLayout(null);
 		frame.setSize(1000, 745);
-		//frame.setLayout(new GridLayout(15, 15, 0, 0));
-		//frame.getContentPane().setBackground(Color.white);
 		
 		JPanel canvas1 = new JPanel();				//|Utilizado para limitar o tamanho que o tabuleiro ocupa
 		canvas1.setBounds(0, -5, 705, 710);
@@ -52,7 +50,6 @@ public class Grid {
 		JPanel tabuleiro = new JPanel();
 		tabuleiro.setLayout(new GridLayout(15, 15, 0, 0));
 		tabuleiro.setBackground(Color.white);
-		//tabuleiro.setBounds(0, 0, 705, 705);
 		
 		for(int linha = 0; linha <15; linha++) {
 			for(int col = 0; col<15; col++) {
@@ -78,11 +75,9 @@ public class Grid {
 			}
 		}
 		
-
 		camadas.add(camadaPecas);
 		dados = new DadosCliente();
 		camadas.add(dados);
-		
 		
 		camadas.add(origens[0] = new OrigemCliente(0));
 		camadas.add(origens[1] = new OrigemCliente(1));
@@ -96,7 +91,6 @@ public class Grid {
 		canvas1.add(tabuleiro);
 		camadas.add(canvas1);
 		
-		//frame.pack();
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 	}

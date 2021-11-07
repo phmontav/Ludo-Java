@@ -6,17 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
+import javax.swing.*;
 
 public class TelaInicial implements ActionListener{
 
@@ -44,12 +34,10 @@ public class TelaInicial implements ActionListener{
 		fundoLabel.setIcon(fundo);
 		fundoLabel.setBounds(0, -40, 1000, 745);
 		
-		
 		botao.setBounds(17, 560, 254, 39);
 		botao.setFocusable(false);
 		botao.addActionListener(inserir);
 		botao.setBackground(new Color(0xea374d));
-		//botao.setBorder(new LineBorder(new Color(0xea374d)));
 		botao.setForeground(Color.white);
 		botao.setFont(new Font("Arial", Font.BOLD, 15));
 		
@@ -58,7 +46,6 @@ public class TelaInicial implements ActionListener{
 		
 		apelido = new JTextField();
 		apelido.setBounds(17, 381, 254, 39);
-		//apelido.addActionListener(inserir);
 		apelido.setBackground(Color.white);
 		apelido.setBorder(null);
 		apelido.setFont(new Font("Arial", Font.PLAIN, 20));
@@ -72,7 +59,6 @@ public class TelaInicial implements ActionListener{
 		
 		panel.add(apelido);
 		panel.add(enderecoIP);
-		//panel.setBackground(Color.gray);
 		panel.setOpaque(false);
 		panel.setBounds(350, 0, 300, 745);
 		panel.add(botao);
@@ -100,9 +86,6 @@ public class TelaInicial implements ActionListener{
 	};
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void actionPerformed(ActionEvent e) {}
 	
 }

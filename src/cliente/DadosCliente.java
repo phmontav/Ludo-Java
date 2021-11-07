@@ -2,30 +2,31 @@ package cliente;
 
 import java.awt.Color;
 import java.awt.GridLayout;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Random;
 
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
-public class DadosCliente extends JPanel implements MouseListener{
+public class DadosCliente extends JPanel implements MouseListener, ActionListener{
 
 	static public int dado1, dado2, turno;						//Valor do dado 1, valor do dado 2 e valor do jogador que est� jogando agora(1, 2, 3 ou 4 para azul, amarelo, vermelho e verde)
 	static public boolean dado1usado=true, dado2usado=true;	//Indica se determinado dado ja foi utilizado na jogada atual
-	Random random;
 	JLabel label1, label2;								//Icone clicavel dos dados 1 e 2
 	ImageIcon[] DadoImg;								//Vetor que possui as imagens dos dados
+	Timer timer;
+	int contador = 0;
 	
 	public DadosCliente() {
 		DadoImg = new ImageIcon[7];
 		for(int i=1; i<7; i++) {
 			String nomeImg = "Dado" + i + ".png";
 			DadoImg[i] = new ImageIcon(nomeImg);
-			DadoImg[i] = new ImageIcon(DadoImg[i].getImage().getScaledInstance(70, 70,  java.awt.Image.SCALE_SMOOTH));
+			DadoImg[i] = new ImageIcon(DadoImg[i].getImage().getScaledInstance(70, 70,  Image.SCALE_SMOOTH));
 		}
-		random = new Random();
+		timer = new Timer(100, this);
 		turno = 0;
 		this.setBackground(Color.white);
 		this.setBounds(706, 0, 295, 705);
@@ -35,7 +36,6 @@ public class DadosCliente extends JPanel implements MouseListener{
 		molduraDados.setBounds(70, 280, 145, 80);
 		molduraDados.setLayout(new GridLayout(0, 2, 5, 0));
 		molduraDados.setOpaque(false);
-		
 		
 		label1 = new JLabel();
 		label1.setIcon(DadoImg[6]);
@@ -50,30 +50,16 @@ public class DadosCliente extends JPanel implements MouseListener{
 		this.add(molduraDados);
 		this.setVisible(true);
 	}
+
+	public void animacao() {
+		timer.start();
+	}
 	
-	/*static public void proxTurno() {
-		if(DadosCliente.dado1 == 6 && DadosCliente.dado2 == 6) {
-			//repete o turno
-		}
-		else {
-			if(++turno >= 4) {
-				turno = 0;
-			}
-		}
-		System.out.println("Jogador atual: " + turno);
-	}*/
+	@Override
+	public void mouseClicked(MouseEvent e) {}
 
 	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
@@ -84,14 +70,22 @@ public class DadosCliente extends JPanel implements MouseListener{
 	}
 
 	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		label1.setIcon(DadoImg[(contador % 6 + 1)]);
+		label2.setIcon(DadoImg[(contador % 6 + 1)]);
+		contador++;
+		if(contador == 6) {
+			contador = 0;
+			timer.stop();
+			label1.setIcon(DadoImg[dado1]);
+			label2.setIcon(DadoImg[dado2]);
+		}
+		Grid.camadas.repaint();
 	}
 }

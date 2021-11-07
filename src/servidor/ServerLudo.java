@@ -1,9 +1,6 @@
 package servidor;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.Inet6Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
@@ -134,5 +131,8 @@ public class ServerLudo {
 		if(possivel) possivelInt = 1;
 		if(movimentoIniciado) movimentoIniciadoInt = 1;
 		outToAll("DISPONIVEL_CENTRO " + turnoAtual + " " + possivelInt + " " + movimentoIniciadoInt);
+	}
+	public static void animar_dados() {
+		outToAll("ANIMAR______DADOS");
 	}
 }
