@@ -1,19 +1,7 @@
 package servidor;
 
 //comentario dummy
-import java.awt.Color;
-import java.awt.GridLayout;
 import java.util.Stack;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-
-import cliente.CasaCliente;
-import cliente.CentroCliente;
-import cliente.DadosCliente;
-import cliente.OrigemCliente;
 
 public class GridLogic {
 	static CasaServidor caminho[] = new CasaServidor[68];		//Vetor com todas as casas do tabuleiro
@@ -21,7 +9,6 @@ public class GridLogic {
 	static CentroServidor centro = new CentroServidor();
 	static int[] pertoCentro = new int[4];
 	static boolean movimentoIniciado = false;	//True quando uma pe�a est� sendo movida de uma casa para outra
-	static JLayeredPane camadas;
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	25,	-1,	58,	-1,	21,	-1,	-1,	-1,	-1,	-1},
 					 		{-1, -1,	-1,	-1,	-1,	26,	-1,	59,	-1,	20,	-1,	-1,	-1,	-1,	-1},
@@ -40,61 +27,30 @@ public class GridLogic {
 	static PecasServidor camadaPecas = new PecasServidor();
 	
 	public GridLogic() {
-		camadas = new JLayeredPane();	//Organiza os gr�ficos que est�o aparecendo por camadas
-		camadas.setBounds(0, 0, 1000, 705);
-		
-		JFrame frame = new JFrame();
-		frame.add(camadas);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setResizable(false);
-		frame.setLayout(null);
-		frame.setSize(1000, 745);
-		//frame.setLayout(new GridLayout(15, 15, 0, 0));
-		//frame.getContentPane().setBackground(Color.white);
-		
-		JPanel canvas1 = new JPanel();				//|Utilizado para limitar o tamanho que o tabuleiro ocupa
-		canvas1.setBounds(0, -5, 705, 710);
-		
-		
-		JPanel tabuleiro = new JPanel();
-		tabuleiro.setLayout(new GridLayout(15, 15, 0, 0));
-		tabuleiro.setBackground(Color.white);
-		//tabuleiro.setBounds(0, 0, 705, 705);
 		
 		for(int linha = 0; linha <15; linha++) {
 			for(int col = 0; col<15; col++) {
 				if((col==5 || col==7 || col==9)&&(linha<=5 || linha>=9)) {
-					tabuleiro.add(caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col, camadas));
+					caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col);
 				}
 				else {
 					if((linha==5 || linha==7 || linha==9)&&(col<5 || col>9)) {
-						tabuleiro.add(caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col, camadas));
+						caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col);
 					}
 					else {
 						if((col==5 || col==9)&&(linha==7)) {
-							tabuleiro.add(caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col, camadas));
-						}
-						else {
-							JPanel empty = new JPanel();
-							empty.setBackground(Color.white);
-							empty.setBounds(0, 0, 47, 47);
-							tabuleiro.add(empty);
+							caminho[index[linha][col]] = new CasaServidor(index[linha][col], linha, col);
 						}
 					}
 				}
 			}
 		}
-		DadosCliente dados = new DadosCliente();
+		DadosServidor dados = new DadosServidor();
 		
 		origens[0] = new OrigemServidor(0);
 		origens[1] = new OrigemServidor(1);
 		origens[2] = new OrigemServidor(2);
 		origens[3] = new OrigemServidor(3);
-
-		
-		//frame.pack();
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(false);
 	}
 	
 	public static int particular_real(int pos, int turno) {//0, amarelo -> 12
@@ -234,6 +190,12 @@ public class GridLogic {
 				}
 			}
 			break;
+		case 0:
+			if((PecasServidor.posPeca[DadosServidor.turno][0] == -1) && (PecasServidor.posPeca[DadosServidor.turno][1] == -1) && (PecasServidor.posPeca[DadosServidor.turno][2] == -1)) {
+				if(DadosServidor.dado1 != 6 && DadosServidor.dado2 != 6) {
+					DadosServidor.dado1usado = DadosServidor.dado2usado = true;
+				}
+			}
 		}
 		ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
 		if(DadosServidor.dado1usado && DadosServidor.dado2usado)
@@ -582,6 +544,11 @@ public class GridLogic {
 		pertoCentro[DadosServidor.turno] = 0;
 		for(int i = 48; i < 53; i++) {
 			pertoCentro[DadosServidor.turno] += caminho[particular_real(i, DadosServidor.turno)].n_pecas[DadosServidor.turno];
+		}
+		if(centro.n_pecas[DadosServidor.turno] == 3)
+		{
+			//Fim do Jogo
+			ServerLudo.mensagem_controle(2, DadosServidor.turno);
 		}
 		ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
 		verificar_colisao();
