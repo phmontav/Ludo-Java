@@ -64,8 +64,6 @@ public class ServerLudo {
 			clients.get(qtConectada).out.println(qtConectada);
 			statusJogadores[qtConectada] = 1;
 			outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 0");
-			/*String clientResponse = in.readLine();
-			outToAll("Conexao estabelecida com cliente: " + clientResponse);*/
 			qtConectada++;
 		}
 		while(qtConectada == 4 && esperarConexao) {}

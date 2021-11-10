@@ -25,8 +25,13 @@ public class ClientHandler implements Runnable {
 		String clientRequest;
 		try {
 			while(!ServerLudo.fimJogo) {
-				clientRequest = in.readLine();
-				interpretarMensagem(clientRequest);
+				if(ServerLudo.turnoAtual >= ServerLudo.qtConectada && ServerLudo.esperarConexao == false) {
+					JogadorMaquina.jogarMaquina(ServerLudo.turnoAtual);
+				}
+				else{
+					clientRequest = in.readLine();
+					interpretarMensagem(clientRequest);
+				}
 			}
 		} catch (IOException e) {
 			System.out.println("Jogador " + ID + " se desconectou.");
