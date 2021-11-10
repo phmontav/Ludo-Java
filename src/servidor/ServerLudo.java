@@ -18,13 +18,15 @@ public class ServerLudo {
 	static private ArrayList<ClientHandler> clients = new ArrayList<>();
 	static public int turnoAtual = 0;
 	static public int qtConectada = 0;
+	static public boolean fimJogo = false;
 	static public int[] statusJogadores = {0, 0, 0, 0};
 	private static ExecutorService pool = Executors.newFixedThreadPool(4);
 	public static volatile boolean esperarConexao = true;
 	static GridLogic tabuleiro;
+	static ServerSocket listener;
 	
 	public static void main(String[] args) throws IOException {
-		ServerSocket listener = new ServerSocket(PORT);
+		listener = new ServerSocket(PORT);
 		
 		String ip;
 		try {
@@ -43,7 +45,7 @@ public class ServerLudo {
 		            if (addr instanceof Inet6Address) continue;
 
 		            ip = addr.getHostAddress();
-		            System.out.println("[SERVER] O IP para conex�o �: " + ip);
+		            System.out.println("[SERVER] O IP para conexao eh: " + ip);
 		        }
 		    }
 		} catch (SocketException e) {
@@ -56,7 +58,7 @@ public class ServerLudo {
 			if(!esperarConexao) {
 				break;
 			}
-			ClientHandler clientThread = new ClientHandler(client);
+			ClientHandler clientThread = new ClientHandler(client, clients.size());
 			clients.add(clientThread);
 			pool.execute(clientThread);
 			clients.get(qtConectada).out.println(qtConectada);
@@ -69,12 +71,15 @@ public class ServerLudo {
 		while(qtConectada == 4 && esperarConexao) {}
 		outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 1");
 		tabuleiro = new GridLogic();
-		while(true) {
+		while(!fimJogo) {
 			
 		}
-		//System.out.println("[SERVER] Dados Enviados. Encerrando...");
-		//client.close();
-		//listener.close();
+		System.out.println("[SERVER] Passei aqui...");
+		for(ClientHandler aClient : clients) {
+			aClient.client.close();
+			System.out.println("[SERVER] E aqui tbm...");
+		}
+		listener.close();
 	}
 	
 	public static void outToAll(String msg) {
@@ -133,6 +138,24 @@ public class ServerLudo {
 		outToAll("DISPONIVEL_CENTRO " + turnoAtual + " " + possivelInt + " " + movimentoIniciadoInt);
 	}
 	public static void animar_dados() {
-		outToAll("ANIMAR______DADOS");
+		outToAll("ANIMAR______DADOS " + turnoAtual);
+	}
+	public static void mensagem_controle(int comando, int id) {
+		outToAll("MENSAGEM_CONTROLE " + comando + " " + id);
+		fimJogo = true;
+		System.out.println("[SERVER] Encerrando...");
+		for(ClientHandler aClient : clients) {
+			try {
+				aClient.client.close();
+			} catch (IOException e) {
+				System.out.println("Ocorreu um erro!");
+			}
+		}
+		pool.shutdown();
+		try {
+			listener.close();
+		} catch (IOException e) {
+			System.out.println("Erro ao fechar socket!");
+		}
 	}
 }

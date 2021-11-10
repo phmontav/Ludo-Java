@@ -11,8 +11,9 @@ public class ClientLudo {
 
 	private static final int SERVER_PORT = 9090;
 	public static int ID;
+	static boolean fimJogo = false;
 	static Socket receptor;
-	private static ExecutorService pool = Executors.newFixedThreadPool(2);
+	public static ExecutorService pool = Executors.newFixedThreadPool(2);
 	
 	public static PrintWriter out;
 	
