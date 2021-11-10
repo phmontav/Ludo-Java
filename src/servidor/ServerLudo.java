@@ -62,19 +62,14 @@ public class ServerLudo {
 			clients.get(qtConectada).out.println(qtConectada);
 			statusJogadores[qtConectada] = 1;
 			outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 0");
-			/*String clientResponse = in.readLine();
-			outToAll("Conexao estabelecida com cliente: " + clientResponse);*/
 			qtConectada++;
 		}
 		while(qtConectada == 4 && esperarConexao) {}
-		outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 1");
-		tabuleiro = new GridLogic();
+			outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 1");
+			tabuleiro = new GridLogic();
 		while(true) {
 			
 		}
-		//System.out.println("[SERVER] Dados Enviados. Encerrando...");
-		//client.close();
-		//listener.close();
 	}
 	
 	public static void outToAll(String msg) {

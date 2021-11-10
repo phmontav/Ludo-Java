@@ -561,7 +561,7 @@ public class GridLogic {
 	}
 	
 	public static void clickCentro() {
-		int avanco = 0;
+		int avanco = -1;
 		if((53 - DadosServidor.dado1) >= 47 && !DadosServidor.dado1usado && caminho[particular_real(53 - DadosServidor.dado1, DadosServidor.turno)].pecaSaindo) {
 			avanco = particular_real(53 - DadosServidor.dado1, DadosServidor.turno);
 			playCentro(avanco);
@@ -591,6 +591,7 @@ public class GridLogic {
 	public static void playOrigem(int cor, int avanco) {
 		caminho[avanco].nascer = true;
 		movimentoIniciado = true;
+		origens[cor].possivel = true;
 		
 		ServerLudo.disponivel_origem(origens[cor].possivel, movimentoIniciado);
 		ServerLudo.colorir_origem(1);
@@ -610,7 +611,7 @@ public class GridLogic {
 			avanco = particular_real(0, DadosServidor.turno);
 			playOrigem(cor, avanco);
 		}
-		
+		origens[cor].possivel = false;
 	}
 }
 

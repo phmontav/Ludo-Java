@@ -21,13 +21,14 @@ public class DadosServidor extends JPanel {
 			//repete o turno
 		}
 		else {
-			if(++turno >= ServerLudo.qtConectada) {
-				turno = 0;
-			}
+//			if(++turno >= ServerLudo.qtConectada) {
+//				turno = 0;
+//			}
+			turno = (turno + 1)%4;
 		}
 		ServerLudo.turnoAtual = turno;
 		ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
-		System.out.println("Jogador atual: " + turno);	//--------------------------------------Enviar mensagem para a tabela de informações.
+		System.out.println("Jogador atual: " + turno);	//--------------------------------------Enviar mensagem para a tabela de informaï¿½ï¿½es.
 	}
 
 	static public void rolarDados() {
