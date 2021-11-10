@@ -32,12 +32,12 @@ public class ServerConnection implements Runnable{
 			ID = Integer.valueOf(serverResponse);
 			ClientLudo.ID = Integer.valueOf(serverResponse);
 			out.println(apelido);
-			while(true) {
+			while(!ClientLudo.fimJogo) {
 				serverResponse = in.readLine();
 				interpretarMensagem(serverResponse);
 				if(serverResponse == null) break;
 				
-				//System.out.println(serverResponse);
+				System.out.println(serverResponse);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +50,7 @@ public class ServerConnection implements Runnable{
 		}
 	}
 	
-	private void interpretarMensagem(String msg) {
+	private void interpretarMensagem(String msg) throws IOException {
 		if(msg.startsWith("STATUS__JOGADORES")) {
 			if(msg.charAt(26) == '1') {
 				TelaConexao.frame.dispose();
@@ -200,6 +200,27 @@ public class ServerConnection implements Runnable{
 		}
 		if(msg.startsWith("ANIMAR______DADOS")) {
 			Grid.dados.animacao();
+		}
+		if(msg.startsWith("MENSAGEM_CONTROLE")) {
+			int comando = (int)(msg.charAt(18) - '0');
+			int id = (int)(msg.charAt(20) - '0');
+			switch (comando) {
+				case 0:
+					//encerrar
+					break;
+				case 1:
+					//resetar
+					break;
+				case 2:
+					//vencedor
+					Grid.vencedor.setText("Jogador " + id + " venceu!");
+					Grid.vencedor.setVisible(true);
+					Grid.frame.repaint();
+					server.close();
+					ClientLudo.fimJogo = true;
+					ClientLudo.pool.shutdown();
+					break;
+			}
 		}
 	}
 	

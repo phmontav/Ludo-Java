@@ -8,11 +8,13 @@ import java.net.Socket;
 
 public class ClientHandler implements Runnable {
 
-	private Socket client;
+	public Socket client;
 	private BufferedReader in;
 	public PrintWriter out;
+	private int ID;
 	
-	public ClientHandler(Socket clientSocket) throws IOException {
+	public ClientHandler(Socket clientSocket, int id) throws IOException {
+		ID = id;
 		this.client = clientSocket;
 		in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		out = new PrintWriter(client.getOutputStream(), true);
@@ -22,14 +24,14 @@ public class ClientHandler implements Runnable {
 	public void run() {
 		String clientRequest;
 		try {
-			while(true) {
+			while(!ServerLudo.fimJogo) {
 				clientRequest = in.readLine();
 				interpretarMensagem(clientRequest);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Jogador " + ID + " se desconectou.");
 		}
-		//out.close();
+		out.close();
 	}
 	
 	private void interpretarMensagem(String msg) throws IOException {
@@ -46,7 +48,7 @@ public class ClientHandler implements Runnable {
 				if(ServerLudo.statusJogadores[i] <= terminar)
 					terminar = ServerLudo.statusJogadores[i] ;
 			}
-			if(terminar == 2 && ServerLudo.qtConectada > 1) {
+			if(terminar == 2 && ServerLudo.qtConectada > 0) {
 				ServerLudo.esperarConexao = false;
 				if(ServerLudo.qtConectada<4) {
 					Socket dummy = new Socket ("127.0.0.1", 9090);

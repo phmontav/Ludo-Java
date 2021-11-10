@@ -1,8 +1,10 @@
 package cliente;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
@@ -11,7 +13,9 @@ public class Grid {
 	static OrigemCliente origens[] = new OrigemCliente[4];
 	static CentroCliente centro = new CentroCliente();
 	static JLayeredPane camadas;
+	static JLabel vencedor;
 	static DadosCliente dados;
+	static JFrame frame;
 	static int[] pertoCentro = new int[4];
 	static boolean movimentoIniciado = false;	//True quando uma peca esta sendo movida de uma casa para outra
 	static int[][] index = {{-1, -1,	-1,	-1,	-1,	24,	-1,	23,	-1,	22,	-1,	-1,	-1,	-1,	-1},
@@ -33,10 +37,21 @@ public class Grid {
 	
 	public Grid() {
 		
+		vencedor = new JLabel("Jogador 1 Venceu");
+		vencedor.setBackground(new Color(0, 0, 0, 90));
+		vencedor.setForeground(Color.white);
+		vencedor.setOpaque(true);
+		vencedor.setVisible(false);
+		vencedor.setBounds(0, 0, 705, 705);
+		vencedor.setFont(new Font("Arial", Font.BOLD, 70));
+		vencedor.setHorizontalAlignment(JLabel.CENTER);
+		vencedor.setVerticalAlignment(JLabel.CENTER);
+		
 		camadas = new JLayeredPane();	//Organiza os graficos que estao aparecendo por camadas
 		camadas.setBounds(0, 0, 1000, 705);
+		camadas.add(vencedor);
 		
-		JFrame frame = new JFrame();
+		frame = new JFrame();
 		frame.add(camadas);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);

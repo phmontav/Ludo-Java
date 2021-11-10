@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import javax.swing.JLayeredPane;
-import javax.swing.JPanel;
-
-public class CasaServidor extends JPanel {
+public class CasaServidor {
 	
 	public int pos;
 	public int x, y;
@@ -16,16 +13,14 @@ public class CasaServidor extends JPanel {
 	public boolean possivel;
 	public boolean nascer;
 	public boolean pecaSaindo;
-	public JLayeredPane camadasRef;
 	
-	public CasaServidor(int n, int y_n, int x_n, JLayeredPane camadas){
+	public CasaServidor(int n, int y_n, int x_n){
 		this.pos= n;
 		possivel = false;
 		nascer = false;
 		pecaSaindo = false;
 		x = x_n*47;
 		y = y_n*47;
-		camadasRef = camadas;
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
