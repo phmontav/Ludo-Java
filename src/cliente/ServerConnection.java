@@ -38,7 +38,7 @@ public class ServerConnection implements Runnable{
 				interpretarMensagem(serverResponse);
 				if(serverResponse == null) break;
 				
-				//System.out.println(serverResponse);
+				System.out.println(serverResponse);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();

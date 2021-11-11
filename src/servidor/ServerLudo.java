@@ -72,15 +72,6 @@ public class ServerLudo {
 		atualizar_nomes();
 		tabuleiro = new GridLogic();
 		atualizar_info("Turno atual: " + ServerLudo.apelidos[DadosServidor.turno]);
-		/*while(!fimJogo) {
-			
-		}*/
-//		System.out.println("[SERVER] Passei aqui...");
-//		for(ClientHandler aClient : clients) {
-//			aClient.client.close();
-//			System.out.println("[SERVER] E aqui tbm...");
-//		}
-//		listener.close();
 	}
 	
 	public static void outToAll(String msg) {
