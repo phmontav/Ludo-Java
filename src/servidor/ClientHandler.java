@@ -23,19 +23,23 @@ public class ClientHandler implements Runnable {
 	@Override
 	public void run() {
 		String clientRequest;
-		try {
-			while(!ServerLudo.fimJogo) {
-				if(ServerLudo.turnoAtual >= ServerLudo.qtConectada && ServerLudo.esperarConexao == false) {
+		while(!ServerLudo.fimJogo) {
+			try {
+				if((ServerLudo.statusJogadores[ServerLudo.turnoAtual] == 0 && ServerLudo.esperarConexao == false)) {
+					
 					JogadorMaquina.jogarMaquina(ServerLudo.turnoAtual);
 				}
 				else{
-					clientRequest = in.readLine();
-					interpretarMensagem(clientRequest);
+					if(ServerLudo.statusJogadores[ID] != 0) {
+						clientRequest = in.readLine();
+						interpretarMensagem(clientRequest);
+					}
 				}
+			} catch (IOException e) {
+				ServerLudo.atualizar_info(ServerLudo.apelidos[ID] + " se desconectou. Uma maquina foi adicionada em seu lugar.");
+				ServerLudo.statusJogadores[ID] = 0;
 			}
-		} catch (IOException e) {
-			System.out.println("Jogador " + ID + " se desconectou.");
-		}
+		} 
 		out.close();
 	}
 	
@@ -87,6 +91,10 @@ public class ClientHandler implements Runnable {
 			if(idJogador == ServerLudo.turnoAtual)
 				GridLogic.clickCentro();
 			return;
+		}
+		if(msg.startsWith("ENVIAR__NOME")) {
+			int idJogador = (int)(msg.charAt(13) - '0');
+			ServerLudo.apelidos[idJogador] = msg.substring(15, msg.length());
 		}
 	}
 }

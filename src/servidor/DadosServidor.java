@@ -26,7 +26,7 @@ public class DadosServidor {
 		}
 		ServerLudo.turnoAtual = turno;
 		ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
-		System.out.println("Jogador atual: " + turno);	//--------------------------------------Enviar mensagem para a tabela de informa��es.
+		ServerLudo.atualizar_info("Turno atual: " + ServerLudo.apelidos[turno]);
 	}
 
 	static public void rolarDados() {
@@ -37,10 +37,11 @@ public class DadosServidor {
 			dado2usado = false;
 			ServerLudo.atualizar_dados(DadosServidor.dado1, DadosServidor.dado1usado, DadosServidor.dado2, DadosServidor.dado2usado);
 			ServerLudo.animar_dados();
-			System.out.println("       Jogador " + turno + " tirou " + dado1 + " e " + dado2);
+			if(dado1 == 6 && dado2 == 6)
+				ServerLudo.atualizar_info("        " + ServerLudo.apelidos[turno] + " pode repetir o turno.");
 			if(GridLogic.origens[turno].dentro + GridLogic.centro.n_pecas[turno] == 3 && dado1 != 6 && dado2 != 6) {
 				if(chance == 0) {
-					System.out.println("       Jogador " + turno + " perdeu a vez.");
+					ServerLudo.atualizar_info("        " + ServerLudo.apelidos[turno] + " perdeu a vez.");
 					chance = 2;
 					dado1usado = true;
 					dado2usado = true;
@@ -48,7 +49,7 @@ public class DadosServidor {
 					return;
 				}
 				else {
-					System.out.println("       Jogador " + turno + " tem mais " + chance + " chance(s) de rolar os dados.");
+					ServerLudo.atualizar_info("        " + ServerLudo.apelidos[turno] + " tem mais " + chance + " chance(s).");
 					chance--;
 					dado1usado = true;
 					dado2usado = true;

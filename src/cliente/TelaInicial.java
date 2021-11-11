@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.net.URL;
 import java.net.UnknownHostException;
 import javax.swing.*;
 
@@ -12,7 +13,8 @@ public class TelaInicial implements ActionListener{
 
 	static JFrame frame = new JFrame();
 	JButton botao = new JButton("Conectar");
-	ImageIcon fundo = new ImageIcon("TelaInicialLudo.png");
+	URL url = getClass().getResource("/resource/TelaInicialLudo.png");
+	ImageIcon fundo = new ImageIcon(url);
 	JLabel fundoLabel = new JLabel();
 	
 	private static JTextField apelido;
@@ -75,8 +77,11 @@ public class TelaInicial implements ActionListener{
 	    @Override
 	    public void actionPerformed(ActionEvent e)
 	    {
+	    	String nick = apelido.getText();
+	    	if(nick.isBlank())
+	    		nick = "SemNome";
 	    	try {
-	    		ClientLudo.Conectar(enderecoIP.getText(), apelido.getText());
+	    		ClientLudo.Conectar(enderecoIP.getText(), nick);
 			} catch (UnknownHostException e1) {
 				System.out.println("Insira IP válido e tente novamente.");
 			} catch (IOException e1) {

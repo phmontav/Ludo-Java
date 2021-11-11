@@ -1,5 +1,6 @@
 package cliente;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -14,12 +15,14 @@ public class ClientLudo {
 	static boolean fimJogo = false;
 	static Socket receptor;
 	public static ExecutorService pool = Executors.newFixedThreadPool(2);
+	static public String[] apelidos = {"Azul", "Amarelo", "Vermelho", "Verde"};
+	static Color[] cores = {new Color(0x00e8fc), new Color(0xf9c846), new Color(0xf96e46), new Color(0x0fff95)};
 	
 	public static PrintWriter out;
 	
 	public static void main(String[] args) throws IOException {
 		
-		TelaInicial titulo = new TelaInicial();
+		new TelaInicial();
 		
 	}
 	
@@ -55,5 +58,8 @@ public class ClientLudo {
 	}
 	public static void iniciar_jogo(int s) {
 		enviarMensagem("INICIAR_JOGO " + ID + " " + s);
+	}
+	public static void enviar__nome(String nome) {
+		enviarMensagem("ENVIAR__NOME " + ID + " " + nome);
 	}
 }

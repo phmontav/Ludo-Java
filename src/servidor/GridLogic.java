@@ -45,7 +45,7 @@ public class GridLogic {
 				}
 			}
 		}
-		DadosServidor dados = new DadosServidor();
+		new DadosServidor();
 		
 		origens[0] = new OrigemServidor(0);
 		origens[1] = new OrigemServidor(1);

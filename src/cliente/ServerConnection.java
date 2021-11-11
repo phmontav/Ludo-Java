@@ -31,13 +31,14 @@ public class ServerConnection implements Runnable{
 			String serverResponse = in.readLine();
 			ID = Integer.valueOf(serverResponse);
 			ClientLudo.ID = Integer.valueOf(serverResponse);
-			out.println(apelido);
+			//out.println(apelido);
+			ClientLudo.enviar__nome(apelido);
 			while(!ClientLudo.fimJogo) {
 				serverResponse = in.readLine();
 				interpretarMensagem(serverResponse);
 				if(serverResponse == null) break;
 				
-				System.out.println(serverResponse);
+				//System.out.println(serverResponse);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -53,6 +54,7 @@ public class ServerConnection implements Runnable{
 	private void interpretarMensagem(String msg) throws IOException {
 		if(msg.startsWith("STATUS__JOGADORES")) {
 			if(msg.charAt(26) == '1') {
+				//ClientLudo.enviar__nome(apelido);
 				TelaConexao.frame.dispose();
 				tabuleiro = new Grid();
 			}
@@ -213,7 +215,8 @@ public class ServerConnection implements Runnable{
 					break;
 				case 2:
 					//vencedor
-					Grid.vencedor.setText("Jogador " + id + " venceu!");
+					Grid.vencedor.setText("<html><p align=center style=\"width:400px\">" + "Jogador " + ClientLudo.apelidos[id] + " venceu!" + "</p></html>");
+					Grid.vencedor.setForeground(ClientLudo.cores[id]);
 					Grid.vencedor.setVisible(true);
 					Grid.frame.repaint();
 					server.close();
@@ -222,8 +225,21 @@ public class ServerConnection implements Runnable{
 					break;
 			}
 		}
+		if(msg.startsWith("ATUALIZAR___NOMES")) {
+			int id = (int)(msg.charAt(18) - '0');
+			ClientLudo.apelidos[id] = msg.substring(20, msg.length());
+		}
+		if(msg.startsWith("ATUALIZAR____INFO")) {
+			DadosCliente.terminal.setForeground(ClientLudo.cores[turnoAtual]);
+			DadosCliente.terminal.append("\n" + msg.substring(18, msg.length()));
+			int x;
+			DadosCliente.terminal.selectAll();
+			x = DadosCliente.terminal.getSelectionEnd();
+			DadosCliente.terminal.select(x,x);
+		}
+		
 	}
-	
+		
 	public void enviarMensagem(String msg) {
 		out.println(msg);
 	}

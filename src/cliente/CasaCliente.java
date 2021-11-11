@@ -16,12 +16,12 @@ import javax.swing.JPanel;
 public class CasaCliente extends JPanel implements MouseListener{
 	
 	public int pos;
-	public int x, y;																//---Serv?
-	public int[] n_pecas = {0, 0, 0, 0};		//Array com numero de pecas de cada cor--Serv
-	public List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();	//-----------Serv
-	public boolean possivel;	//Indica se � possivel mover uma pe�a para esta casa-----Serv
-	public boolean nascer;	//Indica se � possivel mover uma pe�a para esta casa---------Serv
-	public boolean pecaSaindo;	//Indica se uma pe�a est� sendo retirada desta cada------Serv
+	public int x, y;
+	public int[] n_pecas = {0, 0, 0, 0};
+	public List<Stack<Integer>> pecas = new ArrayList<Stack<Integer>>();
+	public boolean possivel;
+	public boolean nascer;
+	public boolean pecaSaindo;
 	public JLayeredPane camadasRef;
 	Color tint = new Color(0xcbc0d3);
 	Color tintPossivel = new Color(0x785964);
@@ -43,6 +43,27 @@ public class CasaCliente extends JPanel implements MouseListener{
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
+		
+		if(pos == 0) {
+			atual = tint = new Color(0x00e8fc);
+			tintPossivel = new Color(0x00b5c5);
+			tintSelected = new Color(0x00b5c5);
+		}
+		if(pos == 12) {
+			atual = tint = new Color(0xf9c846);
+			tintPossivel = new Color(0xc39d38);
+			tintSelected = new Color(0xc39d38);
+		}
+		if(pos == 24) {
+			atual = tint = new Color(0xf96e46);
+			tintPossivel = new Color(0xc65838);
+			tintSelected = new Color(0xc65838);
+		}
+		if(pos == 36) {
+			atual = tint = new Color(0x0fff95);
+			tintPossivel = new Color(0x0ec172);
+			tintSelected = new Color(0x0ec172);
+		}
 	}
 	
 	public void paintComponent(Graphics g) {
