@@ -35,7 +35,7 @@ public class ClientHandler implements Runnable {
 						interpretarMensagem(clientRequest);
 					}
 				}
-			} catch (IOException e) {
+			} catch (Exception e) {
 				ServerLudo.atualizar_info(ServerLudo.apelidos[ID] + " se desconectou. Uma maquina foi adicionada em seu lugar.");
 				ServerLudo.statusJogadores[ID] = 0;
 			}
@@ -43,7 +43,7 @@ public class ClientHandler implements Runnable {
 		out.close();
 	}
 	
-	private void interpretarMensagem(String msg) throws IOException {
+	private void interpretarMensagem(String msg) throws Exception {
 		if(msg.startsWith("INICIAR_JOGO")) {
 			int id = (int)(msg.charAt(13) - '0');
 			if(msg.charAt(15) == '0')

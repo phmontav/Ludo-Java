@@ -51,7 +51,7 @@ public class Grid {
 		camadas.setBounds(0, 0, 1000, 705);
 		camadas.add(vencedor);
 		
-		frame = new JFrame();
+		frame = new JFrame("LUDO-Cliente");
 		frame.add(camadas);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setResizable(false);

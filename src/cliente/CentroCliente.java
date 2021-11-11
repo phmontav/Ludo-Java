@@ -33,7 +33,7 @@ public class CentroCliente extends JPanel implements MouseListener{
 		url = getClass().getResource("/resource/Centro.png");
 		img_atual = img_normal = new ImageIcon(url).getImage();
 		url = getClass().getResource("/resource/CentroSelected.png");
-		img_selected = new ImageIcon("CentroSelected.png").getImage();
+		img_selected = new ImageIcon(url).getImage();
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());
 		pecas.add(new Stack<Integer>());

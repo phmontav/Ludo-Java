@@ -1,5 +1,7 @@
 package servidor;
 
+import java.awt.Color;
+import java.awt.Font;
 import java.io.IOException;
 import java.net.Inet6Address;
 import java.net.InetAddress;
@@ -11,6 +13,10 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class ServerLudo {
 	private static final int PORT = 9090;
@@ -26,8 +32,30 @@ public class ServerLudo {
 	static GridLogic tabuleiro;
 	static ServerSocket listener;
 	
+	static JFrame frame = new JFrame("LUDO-Servidor");
+	static JTextArea terminal;
+	static JScrollPane scrollFrame;
+	
 	public static void main(String[] args) throws IOException {
 		listener = new ServerSocket(PORT);
+		
+		frame.setBackground(Color.white);
+		frame.setBounds(0, 0, 300, 400);
+		frame.setLayout(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setResizable(false);
+		
+		terminal = new JTextArea();
+		terminal.setFont(new Font("Arial", Font.BOLD, 11));
+		terminal.setBackground(Color.black);
+		terminal.setForeground(Color.yellow);
+		terminal.setLineWrap(true);
+		terminal.setWrapStyleWord(true);
+		terminal.setEditable(false);
+		scrollFrame = new JScrollPane(terminal, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollFrame.setBounds(0, 0, 285, 355);
+		frame.add(scrollFrame);
+		frame.setVisible(true);
 		
 		String ip;
 		try {
@@ -46,15 +74,15 @@ public class ServerLudo {
 		            if (addr instanceof Inet6Address) continue;
 
 		            ip = addr.getHostAddress();
-		            System.out.println("[SERVER] O IP para conexao eh: " + ip);
+		            escrever_servidor("[SERVER] O IP para conexao eh: " + ip);
 		        }
 		    }
 		} catch (SocketException e) {
-			System.out.println("[SERVER] Erro na identificacao do IP.");
+			escrever_servidor("[SERVER] Erro na identificacao do IP.");
 		}
 		
 		while(esperarConexao && qtConectada < 4) {
-			System.out.println("[SERVER] Esperando conexao com cliente...");
+			escrever_servidor("[SERVER] Esperando conexao com cliente...");
 			Socket client = listener.accept();
 			if(!esperarConexao) {
 				break;
@@ -156,8 +184,15 @@ public class ServerLudo {
 		}
 	}
 	public static void atualizar_info(String msg) {
-		System.out.println(msg);
+		escrever_servidor(msg);
 		outToAll("ATUALIZAR____INFO " + msg);
+	}
+	public static void escrever_servidor(String msg) {
+		terminal.append("\n" + msg);
+		int x;
+		terminal.selectAll();
+		x = terminal.getSelectionEnd();
+		terminal.select(x,x);
 	}
 	
 }

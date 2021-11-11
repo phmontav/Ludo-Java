@@ -31,17 +31,24 @@ public class ServerConnection implements Runnable{
 			String serverResponse = in.readLine();
 			ID = Integer.valueOf(serverResponse);
 			ClientLudo.ID = Integer.valueOf(serverResponse);
-			//out.println(apelido);
 			ClientLudo.enviar__nome(apelido);
 			while(!ClientLudo.fimJogo) {
 				serverResponse = in.readLine();
 				interpretarMensagem(serverResponse);
 				if(serverResponse == null) break;
 				
-				System.out.println(serverResponse);
+				//System.out.println(serverResponse);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			try {
+				DadosCliente.terminal.append("\nVoce foi desconectado." );
+				int x;
+				DadosCliente.terminal.selectAll();
+				x = DadosCliente.terminal.getSelectionEnd();
+				DadosCliente.terminal.select(x,x);
+			} catch (Exception e1) {
+				TelaConexao.frame.dispose();
+			}
 		} finally {
 			try {
 				in.close();
@@ -215,7 +222,7 @@ public class ServerConnection implements Runnable{
 					break;
 				case 2:
 					//vencedor
-					Grid.vencedor.setText("<html><p align=center style=\"width:400px\">" + "Jogador " + ClientLudo.apelidos[id] + " venceu!" + "</p></html>");
+					Grid.vencedor.setText("<html><p align=center style=\"width:400px\">" + ClientLudo.apelidos[id] + " venceu!" + "</p></html>");
 					Grid.vencedor.setForeground(ClientLudo.cores[id]);
 					Grid.vencedor.setVisible(true);
 					Grid.frame.repaint();

@@ -16,6 +16,7 @@ public class TelaInicial implements ActionListener{
 	URL url = getClass().getResource("/resource/TelaInicialLudo.png");
 	ImageIcon fundo = new ImageIcon(url);
 	JLabel fundoLabel = new JLabel();
+	JLabel error = new JLabel();
 	
 	private static JTextField apelido;
 	private static JTextField enderecoIP;
@@ -31,6 +32,11 @@ public class TelaInicial implements ActionListener{
 		
 		JLayeredPane camadas = new JLayeredPane();
 		camadas.setBounds(0, 0, 1000, 745);
+		error.setBounds(100, 600, 800, 40);
+		error.setHorizontalAlignment(JLabel.CENTER);
+		error.setForeground(new Color(0xe86b67));
+		error.setFont(new Font("Arial", Font.BOLD, 15));
+		camadas.add(error);
 		frame.add(camadas);
 		
 		fundoLabel.setIcon(fundo);
@@ -83,9 +89,9 @@ public class TelaInicial implements ActionListener{
 	    	try {
 	    		ClientLudo.Conectar(enderecoIP.getText(), nick);
 			} catch (UnknownHostException e1) {
-				System.out.println("Insira IP válido e tente novamente.");
+				error.setText("Insira IP válido e tente novamente.");
 			} catch (IOException e1) {
-				System.out.println("Problema de Conexão. Tente novamente.");
+				error.setText("Problema de Conexão. Tente novamente.");
 			}
 	    }
 	};
