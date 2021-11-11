@@ -20,6 +20,7 @@ public class ServerLudo {
 	static public int qtConectada = 0;
 	static public boolean fimJogo = false;
 	static public int[] statusJogadores = {0, 0, 0, 0};
+	static public String[] apelidos = {"Azul", "Amarelo", "Vermelho", "Verde"};
 	private static ExecutorService pool = Executors.newFixedThreadPool(4);
 	public static volatile boolean esperarConexao = true;
 	static GridLogic tabuleiro;
@@ -58,26 +59,28 @@ public class ServerLudo {
 			if(!esperarConexao) {
 				break;
 			}
-			ClientHandler clientThread = new ClientHandler(client, clients.size());
+			ClientHandler clientThread = new ClientHandler(client, qtConectada);
+			statusJogadores[qtConectada] = 1;
 			clients.add(clientThread);
 			pool.execute(clientThread);
 			clients.get(qtConectada).out.println(qtConectada);
-			statusJogadores[qtConectada] = 1;
 			outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 0");
 			qtConectada++;
 		}
 		while(qtConectada == 4 && esperarConexao) {}
 		outToAll("STATUS__JOGADORES " + statusJogadores[0] + " " + statusJogadores[1] + " " + statusJogadores[2] + " " + statusJogadores[3] + " 1");
+		atualizar_nomes();
 		tabuleiro = new GridLogic();
-		while(!fimJogo) {
+		atualizar_info("Turno atual: " + ServerLudo.apelidos[DadosServidor.turno]);
+		/*while(!fimJogo) {
 			
-		}
-		System.out.println("[SERVER] Passei aqui...");
-		for(ClientHandler aClient : clients) {
-			aClient.client.close();
-			System.out.println("[SERVER] E aqui tbm...");
-		}
-		listener.close();
+		}*/
+//		System.out.println("[SERVER] Passei aqui...");
+//		for(ClientHandler aClient : clients) {
+//			aClient.client.close();
+//			System.out.println("[SERVER] E aqui tbm...");
+//		}
+//		listener.close();
 	}
 	
 	public static void outToAll(String msg) {
@@ -138,6 +141,11 @@ public class ServerLudo {
 	public static void animar_dados() {
 		outToAll("ANIMAR______DADOS " + turnoAtual);
 	}
+	public static void atualizar_nomes() {
+		for(int i = 0; i < 4; i++) {
+			outToAll("ATUALIZAR___NOMES " + i + " " + ServerLudo.apelidos[i]);
+		}
+	}
 	public static void mensagem_controle(int comando, int id) {
 		outToAll("MENSAGEM_CONTROLE " + comando + " " + id);
 		fimJogo = true;
@@ -156,4 +164,9 @@ public class ServerLudo {
 			System.out.println("Erro ao fechar socket!");
 		}
 	}
+	public static void atualizar_info(String msg) {
+		System.out.println(msg);
+		outToAll("ATUALIZAR____INFO " + msg);
+	}
+	
 }

@@ -37,7 +37,7 @@ public class Grid {
 	
 	public Grid() {
 		
-		vencedor = new JLabel("Jogador 1 Venceu");
+		vencedor = new JLabel("<html><p align=center style=\"width:400px\">" + "Jogador " + "Aguiar" + " venceu!" + "</p></html>");
 		vencedor.setBackground(new Color(0, 0, 0, 90));
 		vencedor.setForeground(Color.white);
 		vencedor.setOpaque(true);

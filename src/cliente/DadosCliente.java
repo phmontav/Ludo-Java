@@ -1,12 +1,14 @@
 package cliente;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.net.URL;
 
 import javax.swing.*;
 
@@ -16,14 +18,17 @@ public class DadosCliente extends JPanel implements MouseListener, ActionListene
 	static public boolean dado1usado=true, dado2usado=true;	//Indica se determinado dado ja foi utilizado na jogada atual
 	JLabel label1, label2;								//Icone clicavel dos dados 1 e 2
 	ImageIcon[] DadoImg;								//Vetor que possui as imagens dos dados
+	static JTextArea terminal;
+	static JScrollPane scrollFrame;
 	Timer timer;
 	int contador = 0;
+	URL url;
 	
 	public DadosCliente() {
 		DadoImg = new ImageIcon[7];
 		for(int i=1; i<7; i++) {
-			String nomeImg = "Dado" + i + ".png";
-			DadoImg[i] = new ImageIcon(nomeImg);
+			url = getClass().getResource("/resource/Dado" + i + ".png");
+			DadoImg[i] = new ImageIcon(url);
 			DadoImg[i] = new ImageIcon(DadoImg[i].getImage().getScaledInstance(70, 70,  Image.SCALE_SMOOTH));
 		}
 		timer = new Timer(100, this);
@@ -31,6 +36,16 @@ public class DadosCliente extends JPanel implements MouseListener, ActionListene
 		this.setBackground(Color.white);
 		this.setBounds(706, 0, 295, 705);
 		this.setLayout(null);
+		
+		terminal = new JTextArea();
+		terminal.setFont(new Font("Arial", Font.BOLD, 11));
+		terminal.setForeground(Color.black);
+		terminal.setLineWrap(true);
+		terminal.setWrapStyleWord(true);
+		terminal.setEditable(false);
+		scrollFrame = new JScrollPane(terminal, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollFrame.setBounds(5, 450, 270, 250);
+		this.add(scrollFrame);
 		
 		JPanel molduraDados = new JPanel();
 		molduraDados.setBounds(70, 280, 145, 80);

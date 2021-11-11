@@ -9,6 +9,7 @@ public class JogadorMaquina {
 				if(GridLogic.centro.possivel && GridLogic.movimentoIniciado) {
 					Thread.sleep(1000);
 					GridLogic.clickCentro();
+					Thread.sleep(500);
 				}
 			}
 		}
@@ -20,6 +21,7 @@ public class JogadorMaquina {
 		if(GridLogic.movimentoIniciado && GridLogic.caminho[avanco].nascer == true) {
 			Thread.sleep(1000);
 			GridLogic.clickCasa(avanco);
+			Thread.sleep(500);
 		}
 		
 		GridLogic.clickOrigem(meuTurno);
@@ -27,6 +29,7 @@ public class JogadorMaquina {
 		if(GridLogic.movimentoIniciado && GridLogic.caminho[avanco].nascer == true) {
 			Thread.sleep(1000);
 			GridLogic.clickCasa(avanco);
+			Thread.sleep(500);
 		}
 	}
 	
@@ -36,11 +39,12 @@ public class JogadorMaquina {
 				int pos = PecasServidor.posPeca[meuTurno][i];
 				if(pos != -1) {
 					GridLogic.clickCasa(pos);
-					for(int j = 0; j < 68; j++) {
+					for(int j = 67; j >= 0; j--) {
 						if(GridLogic.caminho[j].possivel) {
 							int avanco = j;
 							Thread.sleep(1000);
 							GridLogic.clickCasa(avanco);
+							Thread.sleep(500);
 						}
 					}
 				}
